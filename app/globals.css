@@ -1,26 +1,116 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light dark;
+  --background: #f5f6f8;
+  --foreground: #111827;
+  --muted-foreground: #6b7280;
+  --surface: #ffffff;
+  --surface-2: #f9fafb;
+  --border: #e5e7eb;
+  --primary: #111827;
+  --primary-foreground: #ffffff;
+  --success: #15803d;
+  --danger: #b91c1c;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--surface-2);
+  --color-secondary-foreground: var(--foreground);
+  --color-destructive: var(--danger);
+  --color-destructive-foreground: #ffffff;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #09090b;
+    --foreground: #f3f4f6;
+    --muted-foreground: #a1a1aa;
+    --surface: #18181b;
+    --surface-2: #27272a;
+    --border: #3f3f46;
+    --primary: #fafafa;
+    --primary-foreground: #18181b;
+    --success: #4ade80;
+    --danger: #f87171;
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+.app-shell {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.surface-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+.text-muted {
+  color: var(--muted-foreground);
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border: 1px solid var(--primary);
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+}
+
+.btn-option {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--foreground);
+}
+
+.btn-option:hover {
+  background: var(--surface-2);
+}
+
+.state-correct {
+  background: var(--success);
+  border-color: var(--success);
+  color: #ffffff;
+}
+
+.state-wrong {
+  background: var(--danger);
+  border-color: var(--danger);
+  color: #ffffff;
+}
+
+.feedback-correct {
+  color: var(--success);
+}
+
+.feedback-wrong {
+  color: var(--danger);
+}
+
+.routine-feature-slot {
+  background: var(--surface-2);
+}
+
+.progress-track {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+}
+
+.progress-fill {
+  background: var(--primary);
 }
