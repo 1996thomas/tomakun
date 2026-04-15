@@ -1,0 +1,1214 @@
+[
+  {
+    "level": "N5",
+    "word": "いい",
+    "reading": "いい",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "いい",
+    "reading": "よい",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "よい",
+    "reading": "いい",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "よい",
+    "reading": "よい",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "伯父",
+    "reading": "おじいさん",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "叔父",
+    "reading": "おじいさん",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "伯父",
+    "reading": "おじさん",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "叔父",
+    "reading": "おじさん",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "伯母さん",
+    "reading": "おばさん",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "叔母さん",
+    "reading": "おばさん",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "川",
+    "reading": "かわ",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "河",
+    "reading": "かわ",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "九",
+    "reading": "きゅう",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "九",
+    "reading": "く",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "キロ",
+    "reading": "キロ",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "キロ",
+    "reading": "キログラム",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "キログラム",
+    "reading": "キロ",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "キログラム",
+    "reading": "キログラム",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "キロ",
+    "reading": "キロ",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "キロ",
+    "reading": "キロメートル",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "キロメートル",
+    "reading": "キロ",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "キロメートル",
+    "reading": "キロメートル",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "四",
+    "reading": "し",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "四",
+    "reading": "よん",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "七",
+    "reading": "しち",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "七",
+    "reading": "なな",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "じゃ",
+    "reading": "じゃ",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "じゃ",
+    "reading": "じゃあ",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "じゃあ",
+    "reading": "じゃ",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "じゃあ",
+    "reading": "じゃあ",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "そうして",
+    "reading": "そうして",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "そうして",
+    "reading": "そして",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "そして",
+    "reading": "そうして",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "そして",
+    "reading": "そして",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "誰",
+    "reading": "だれか",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "一日",
+    "reading": "ついたち",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "何",
+    "reading": "なん",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "何",
+    "reading": "なに",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "初め",
+    "reading": "はじめ",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "始め",
+    "reading": "はじめ",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "毎月",
+    "reading": "まいげつ",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "毎月",
+    "reading": "まいつき",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "毎年",
+    "reading": "まいねん",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "毎年",
+    "reading": "まいとし",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "丸い",
+    "reading": "まるい",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "円い",
+    "reading": "まるい",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "ラジカセ",
+    "reading": "ラジカセ",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "ラジオカセット",
+    "reading": "ラジオカセット",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "私",
+    "reading": "わたし",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "より",
+    "reading": "より",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "より",
+    "reading": "ほう",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "ほう",
+    "reading": "より",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N5",
+    "word": "ほう",
+    "reading": "ほう",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "あいさつ",
+    "reading": "あいさつ",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "案内",
+    "reading": "あんない",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "運転",
+    "reading": "うんてん",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "運動",
+    "reading": "うんどう",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "遠慮",
+    "reading": "えんりょ",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "堅",
+    "reading": "かたい",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "硬",
+    "reading": "かたい",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "固い",
+    "reading": "かたい",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "お・金持ち",
+    "reading": "かねもち",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "お・金持ち",
+    "reading": "おかねもち",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "君",
+    "reading": "くん",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "計画",
+    "reading": "けいかく",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "経験",
+    "reading": "けいけん",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "けが",
+    "reading": "けが",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "けれど",
+    "reading": "けれど",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "けれど",
+    "reading": "けれども",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "けれども",
+    "reading": "けれど",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "けれども",
+    "reading": "けれども",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "けんか",
+    "reading": "けんか",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "故障",
+    "reading": "こしょう",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "コンピュータ",
+    "reading": "コンピュータ",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "コンピュータ",
+    "reading": "コンピューター",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "コンピューター",
+    "reading": "コンピュータ",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "コンピューター",
+    "reading": "コンピューター",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "支度",
+    "reading": "したく",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "出席",
+    "reading": "しゅっせき",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "出発",
+    "reading": "しゅっぱつ",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "準備",
+    "reading": "じゅんび",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "招待",
+    "reading": "しょうたい",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "承知",
+    "reading": "しょうち",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "食事",
+    "reading": "しょくじ",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "心配",
+    "reading": "しんぱい",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "生活",
+    "reading": "せいかつ",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "生産",
+    "reading": "せいさん",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "世話",
+    "reading": "せわ",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "相談",
+    "reading": "そうだん",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "退院",
+    "reading": "たいいん",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "チェック",
+    "reading": "チェック",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "入院",
+    "reading": "にゅういん",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "入学",
+    "reading": "にゅうがく",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "拝見",
+    "reading": "はいけん",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "びっくり",
+    "reading": "びっくり",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "放送",
+    "reading": "ほうそう",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "やはり",
+    "reading": "やはり",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "やはり",
+    "reading": "やっぱり",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "やっぱり",
+    "reading": "やはり",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "やっぱり",
+    "reading": "やっぱり",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "止める",
+    "reading": "やめる",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "輸出",
+    "reading": "ゆしゅつ",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "輸入",
+    "reading": "ゆにゅう",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "レポート",
+    "reading": "レポート",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "レポート",
+    "reading": "リポート",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "リポート",
+    "reading": "レポート",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N4",
+    "word": "リポート",
+    "reading": "リポート",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "行き",
+    "reading": "ゆき",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "得る",
+    "reading": "うる",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "お目に掛",
+    "reading": "おめにかかる",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "描く",
+    "reading": "かく",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "上",
+    "reading": "かみ",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "柄",
+    "reading": "がら",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "金",
+    "reading": "きん",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "九",
+    "reading": "く",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "後",
+    "reading": "ご",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "ジェット",
+    "reading": "ジェットき",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "したがっ",
+    "reading": "したがって",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "下",
+    "reading": "しも",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "上",
+    "reading": "じょう",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "数",
+    "reading": "すう",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "素晴らし",
+    "reading": "すばらしい",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "すみませ",
+    "reading": "（感）",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "立ち上が",
+    "reading": "たちあがる",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "唯",
+    "reading": "たった",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "球",
+    "reading": "たま",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "注ぐ",
+    "reading": "つぐ",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "できる",
+    "reading": "（可能。出現。",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "発生）",
+    "reading": "発生）",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "出来るだ",
+    "reading": "できるだけ",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "度",
+    "reading": "ど",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "十",
+    "reading": "とお",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "通り過ぎ",
+    "reading": "とおりすぎる",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "取り上げ",
+    "reading": "とりあげる",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "七",
+    "reading": "なな",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "何",
+    "reading": "なん",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "生",
+    "reading": "なま",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "為る",
+    "reading": "なる",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "年月",
+    "reading": "ねんげつ",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "軒",
+    "reading": "のき",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "後",
+    "reading": "のち",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "梅雨",
+    "reading": "ばいう",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "額",
+    "reading": "ひたい",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "品",
+    "reading": "ひん",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "不",
+    "reading": "ぶ",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "分",
+    "reading": "ぶん",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "方々",
+    "reading": "ほうぼう",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "他",
+    "reading": "ほか",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "頬",
+    "reading": "ほお",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "本当",
+    "reading": "ほんとう",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "円",
+    "reading": "まる",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "無",
+    "reading": "む",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "文字",
+    "reading": "もんじ",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "持ち上げ",
+    "reading": "もちあげる",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "四",
+    "reading": "よん",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N3",
+    "word": "綿",
+    "reading": "わた",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N2",
+    "word": "アイデア",
+    "reading": "アイデア",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N2",
+    "word": "アイデア",
+    "reading": "アイ",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N2",
+    "word": "アイ",
+    "reading": "アイデア",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N2",
+    "word": "アイ",
+    "reading": "アイ",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N2",
+    "word": "ディア",
+    "reading": "ディア",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N2",
+    "word": "いっていらっし",
+    "reading": "いっていらっし",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N2",
+    "word": "ゃい",
+    "reading": "ゃい",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N2",
+    "word": "いってらっしゃ",
+    "reading": "いってらっしゃ",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N2",
+    "word": "い",
+    "reading": "い",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N2",
+    "word": "いってまいりま",
+    "reading": "いってまいりま",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N2",
+    "word": "す",
+    "reading": "す",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N2",
+    "word": "オートメーショ",
+    "reading": "オートメーショ",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N2",
+    "word": "ン",
+    "reading": "ン",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N2",
+    "word": "お手伝いさ",
+    "reading": "おてつだいさん",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N2",
+    "word": "おまたせしまし",
+    "reading": "おまたせしまし",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N2",
+    "word": "た",
+    "reading": "た",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N2",
+    "word": "思い掛けな",
+    "reading": "おもいがけない",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N2",
+    "word": "かしこまりまし",
+    "reading": "かしこまりまし",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N2",
+    "word": "た",
+    "reading": "た",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N2",
+    "word": "湿気",
+    "reading": "しっき",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N2",
+    "word": "消極的",
+    "reading": "しょうきょくて",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N2",
+    "word": "き",
+    "reading": "き",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N2",
+    "word": "対立",
+    "reading": "たいりつ",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N2",
+    "word": "作る",
+    "reading": "つくる",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N2",
+    "word": "造る",
+    "reading": "つくる",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N2",
+    "word": "留まる",
+    "reading": "とまる",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N2",
+    "word": "鈍い",
+    "reading": "のろい",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N2",
+    "word": "引っ繰り返",
+    "reading": "ひっくりかえす",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N2",
+    "word": "引っ繰り返",
+    "reading": "ひっくりかえる",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N2",
+    "word": "待ち合わせ",
+    "reading": "まちあわせる",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N2",
+    "word": "紅葉",
+    "reading": "もみじ",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N2",
+    "word": "レクリェーショ",
+    "reading": "レクリェーショ",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N2",
+    "word": "ン",
+    "reading": "ン",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N1",
+    "word": "彼方此方",
+    "reading": "あちらこちら",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N1",
+    "word": "側",
+    "reading": "がわ",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N1",
+    "word": "堪える",
+    "reading": "こらえる",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N1",
+    "word": "園",
+    "reading": "その",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N1",
+    "word": "堪える",
+    "reading": "たえる",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N1",
+    "word": "館",
+    "reading": "たち",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N1",
+    "word": "丈",
+    "reading": "だけ",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N1",
+    "word": "何方",
+    "reading": "どなた",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N1",
+    "word": "何れ",
+    "reading": "どれ",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N1",
+    "word": "何卒",
+    "reading": "なにとぞ",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N1",
+    "word": "判",
+    "reading": "ばん",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N1",
+    "word": "乾",
+    "reading": "ほし",
+    "reason": "missing_meaning_in_jmdict"
+  },
+  {
+    "level": "N1",
+    "word": "的",
+    "reading": "まと",
+    "reason": "missing_meaning_in_jmdict"
+  }
+]

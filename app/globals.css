@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
   --background: #f5f6f8;
   --foreground: #111827;
   --muted-foreground: #6b7280;
@@ -40,6 +40,34 @@
     --success: #4ade80;
     --danger: #f87171;
   }
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --background: #f5f6f8;
+  --foreground: #111827;
+  --muted-foreground: #6b7280;
+  --surface: #ffffff;
+  --surface-2: #f9fafb;
+  --border: #e5e7eb;
+  --primary: #111827;
+  --primary-foreground: #ffffff;
+  --success: #15803d;
+  --danger: #b91c1c;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --background: #09090b;
+  --foreground: #f3f4f6;
+  --muted-foreground: #a1a1aa;
+  --surface: #18181b;
+  --surface-2: #27272a;
+  --border: #3f3f46;
+  --primary: #fafafa;
+  --primary-foreground: #18181b;
+  --success: #4ade80;
+  --danger: #f87171;
 }
 
 body {
@@ -100,10 +128,6 @@ body {
 
 .feedback-wrong {
   color: var(--danger);
-}
-
-.routine-feature-slot {
-  background: var(--surface-2);
 }
 
 .progress-track {

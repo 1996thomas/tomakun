@@ -4,81 +4,41 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import TrainingProgress from "@/components/progress/TrainingProgress";
-import {
-  getRoutineRunContextForModule,
-  loadRoutineBundle,
-  parseRoutineSeries,
-  resolveFreeSessionTarget,
-  trackRoutineModuleCompletion,
-} from "@/lib/routine.storage";
+import { HIRAGANA_DATA } from "./hiragana.data";
 import { generateHiraganaQuestion } from "./hiragana.logic";
 
 const NEXT_QUESTION_DELAY_MS = 700;
 
-function routineModeMessage(reason: string): string {
-  switch (reason) {
-    case "no_plan":
-      return "Aucune routine enregistree. Cree-la depuis l'accueil.";
-    case "no_run":
-      return "Demarre ta routine depuis l'accueil (bouton Lancer).";
-    case "wrong_scope":
-      return "Ce module n'est pas inclus dans ta routine.";
-    case "not_in_progress":
-      return "Routine terminee ou en pause. Relance depuis l'accueil.";
-    case "stale_run":
-      return "Routine obsolete. Enregistre ou relance depuis l'accueil.";
-    default:
-      return "";
-  }
+type Series = "short" | "medium" | "long";
+
+function parseSeries(value: string | null): Series {
+  if (value === "medium" || value === "long") return value;
+  return "short";
+}
+
+function resolveSessionGoal(series: Series): number {
+  if (series === "short") return 10;
+  if (series === "medium") return 30;
+  return HIRAGANA_DATA.length;
 }
 
 export default function HiraganaQuiz() {
   const searchParams = useSearchParams();
-  const mode = searchParams.get("mode");
-  const isRoutineMode = mode === "routine";
-  const freeSeries = useMemo(
-    () => parseRoutineSeries(searchParams.get("series")),
-    [searchParams],
-  );
+  const series = useMemo(() => parseSeries(searchParams.get("series")), [searchParams]);
+  const sessionGoal = useMemo(() => resolveSessionGoal(series), [series]);
 
   const [question, setQuestion] = useState(() => generateHiraganaQuestion());
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
-  const [routineTick, setRoutineTick] = useState(0);
   const [answeredCount, setAnsweredCount] = useState(0);
   const [correctCount, setCorrectCount] = useState(0);
   const [wrongCount, setWrongCount] = useState(0);
   const [sessionEnded, setSessionEnded] = useState(false);
   const endAfterThisFeedbackRef = useRef(false);
 
-  const routineCtx = useMemo(() => {
-    void routineTick;
-    return getRoutineRunContextForModule("hiragana");
-  }, [routineTick]);
-  const routineLinked = isRoutineMode && routineCtx.canTrack;
+  const isCorrect = selectedAnswer ? selectedAnswer === question.correctAnswer : null;
+  const accuracy = answeredCount > 0 ? Math.round((correctCount / answeredCount) * 100) : 0;
 
-  const sessionGoal = useMemo(() => {
-    if (!isRoutineMode) {
-      return resolveFreeSessionTarget(freeSeries, "hiragana");
-    }
-    const series = routineCtx.bundle.plan?.features.hiragana?.series ?? "short";
-    return resolveFreeSessionTarget(series, "hiragana");
-  }, [isRoutineMode, freeSeries, routineCtx.bundle.plan]);
-
-  const isCorrect = selectedAnswer
-    ? selectedAnswer === question.correctAnswer
-    : null;
-  const accuracy =
-    answeredCount > 0 ? Math.round((correctCount / answeredCount) * 100) : 0;
-
-  const progressTitle = routineLinked ? "Progression routine" : "Progression session";
-  const progressCurrent = routineLinked
-    ? (routineCtx.bundle.run?.doneCount ?? 0)
-    : Math.min(answeredCount, sessionGoal);
-  const progressGoal = routineLinked
-    ? (routineCtx.bundle.run?.targetCount ?? 1)
-    : sessionGoal;
-
-  function resetFreeSession(): void {
+  function resetSession(): void {
     setSessionEnded(false);
     setAnsweredCount(0);
     setCorrectCount(0);
@@ -90,23 +50,14 @@ export default function HiraganaQuiz() {
 
   function handleAnswerSelect(option: string): void {
     if (selectedAnswer || sessionEnded) return;
+
     const correct = option === question.correctAnswer;
     const nextAnswered = answeredCount + 1;
 
-    let stopAfterFeedback = false;
-    if (routineLinked) {
-      trackRoutineModuleCompletion("hiragana");
-      setRoutineTick((t) => t + 1);
-      const bundle = loadRoutineBundle();
-      stopAfterFeedback =
-        bundle.run?.status === "completed" || nextAnswered >= sessionGoal;
-    } else {
-      stopAfterFeedback = nextAnswered >= sessionGoal;
-    }
-
-    endAfterThisFeedbackRef.current = stopAfterFeedback;
+    endAfterThisFeedbackRef.current = nextAnswered >= sessionGoal;
     setSelectedAnswer(option);
     setAnsweredCount(nextAnswered);
+
     if (correct) {
       setCorrectCount((prev) => prev + 1);
     } else {
@@ -116,10 +67,12 @@ export default function HiraganaQuiz() {
 
   useEffect(() => {
     if (!selectedAnswer) return;
+
     const timeout = setTimeout(() => {
       const stop = endAfterThisFeedbackRef.current;
       endAfterThisFeedbackRef.current = false;
       setSelectedAnswer(null);
+
       if (stop) {
         setSessionEnded(true);
       } else {
@@ -134,17 +87,9 @@ export default function HiraganaQuiz() {
     return (
       <section className="flex flex-1 flex-col justify-center">
         <div className="surface-card rounded-xl p-4 shadow-sm">
-          <p className="text-center text-sm font-semibold">
-            {isRoutineMode
-              ? routineCtx.bundle.run?.status === "completed"
-                ? "Routine du jour terminee"
-                : "Bloc hiragana termine"
-              : "Serie terminee"}
-          </p>
+          <p className="text-center text-sm font-semibold">Serie terminee</p>
           <p className="text-muted mt-1 text-center text-xs">
-            {isRoutineMode && routineCtx.bundle.run?.status === "in_progress"
-              ? `Il reste ${Math.max(0, (routineCtx.bundle.run.targetCount ?? 0) - (routineCtx.bundle.run.doneCount ?? 0))} question(s) dans ta routine.`
-              : "Voici le bilan de cette session sur cet ecran."}
+            Voici le bilan de cette session sur cet ecran.
           </p>
 
           <div className="mt-4 grid grid-cols-2 gap-2">
@@ -167,25 +112,13 @@ export default function HiraganaQuiz() {
           </div>
 
           <div className="mt-4 flex flex-col gap-2">
-            {!isRoutineMode && (
-              <button
-                type="button"
-                onClick={resetFreeSession}
-                className="btn-primary h-10 w-full rounded-lg text-sm font-medium"
-              >
-                Nouvelle serie
-              </button>
-            )}
-            {isRoutineMode && (
-              <Link
-                href="/routine"
-                className="btn-primary flex h-10 w-full items-center justify-center rounded-lg text-sm font-medium"
-              >
-                {routineCtx.bundle.run?.status === "completed"
-                  ? "Retour a l'accueil routine"
-                  : "Continuer ma routine"}
-              </Link>
-            )}
+            <button
+              type="button"
+              onClick={resetSession}
+              className="btn-primary h-10 w-full rounded-lg text-sm font-medium"
+            >
+              Nouvelle serie
+            </button>
             <Link
               href="/"
               className="btn-option flex h-10 w-full items-center justify-center rounded-lg text-sm font-medium"
@@ -201,38 +134,14 @@ export default function HiraganaQuiz() {
   return (
     <section className="flex flex-1 flex-col justify-center">
       <div className="surface-card rounded-xl p-4 shadow-sm">
-        {isRoutineMode && !routineLinked && (
-          <p
-            className={
-              routineCtx.reason === "not_in_progress" &&
-              routineCtx.bundle.run?.status === "completed"
-                ? "text-muted mb-3 text-center text-xs"
-                : "feedback-wrong mb-3 text-center text-xs"
-            }
-          >
-            {routineCtx.reason === "not_in_progress" &&
-            routineCtx.bundle.run?.status === "completed"
-              ? "Routine terminee. Tu peux continuer, sans mise a jour du compteur."
-              : routineModeMessage(routineCtx.reason)}
-          </p>
-        )}
-        {isRoutineMode && routineLinked && routineCtx.bundle.run && (
-          <p className="text-muted mb-3 text-center text-xs">
-            {routineCtx.bundle.run.status === "in_progress"
-              ? `Routine en cours: ${routineCtx.bundle.run.doneCount}/${routineCtx.bundle.run.targetCount}`
-              : `Routine terminee: ${routineCtx.bundle.run.doneCount}/${routineCtx.bundle.run.targetCount}`}
-          </p>
-        )}
-        {!isRoutineMode && (
-          <p className="text-muted mb-3 text-center text-xs">
-            Entrainement libre - serie {freeSeries === "short" ? "10" : freeSeries === "medium" ? "30" : "Full"}
-          </p>
-        )}
+        <p className="text-muted mb-3 text-center text-xs">
+          Entrainement libre - serie {series === "short" ? "10" : series === "medium" ? "30" : "Full"}
+        </p>
 
         <TrainingProgress
-          title={progressTitle}
-          current={progressCurrent}
-          goal={progressGoal}
+          title="Progression session"
+          current={Math.min(answeredCount, sessionGoal)}
+          goal={sessionGoal}
           stats={[
             { label: "Reponses", value: answeredCount },
             { label: "Correctes", value: correctCount },
@@ -273,9 +182,7 @@ export default function HiraganaQuiz() {
         <p className="mt-4 h-6 text-center text-sm font-medium">
           {isCorrect === true && <span className="feedback-correct">Correct</span>}
           {isCorrect === false && (
-            <span className="feedback-wrong">
-              Incorrect — {question.correctAnswer}
-            </span>
+            <span className="feedback-wrong">Incorrect - {question.correctAnswer}</span>
           )}
         </p>
       </div>

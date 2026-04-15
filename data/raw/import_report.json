@@ -1,0 +1,58 @@
+{
+  "source": {
+    "primary": "wkei/jlpt-vocab-api (data-source/db/*.json)",
+    "secondaryAllLevels": "Bluskyo/JLPT_Vocabulary (parsedData/*_vocab_cleaned.csv)"
+  },
+  "counts": {
+    "N5": 662,
+    "N4": 632,
+    "N3": 1797,
+    "N2": 1831,
+    "N1": 3463
+  },
+  "n5CrossCheck": {
+    "primaryN5Count": 662,
+    "secondaryN5Count": 700,
+    "missingFromPrimaryN5": 56,
+    "readingCorrections": 0
+  },
+  "crossCheckByLevel": [
+    {
+      "level": "N5",
+      "primaryCount": 662,
+      "secondaryCount": 700,
+      "missingFromPrimary": 56,
+      "missingFromSecondary": 20
+    },
+    {
+      "level": "N4",
+      "primaryCount": 632,
+      "secondaryCount": 649,
+      "missingFromPrimary": 54,
+      "missingFromSecondary": 37
+    },
+    {
+      "level": "N3",
+      "primaryCount": 1797,
+      "secondaryCount": 1835,
+      "missingFromPrimary": 50,
+      "missingFromSecondary": 12
+    },
+    {
+      "level": "N2",
+      "primaryCount": 1831,
+      "secondaryCount": 1846,
+      "missingFromPrimary": 33,
+      "missingFromSecondary": 18
+    },
+    {
+      "level": "N1",
+      "primaryCount": 3463,
+      "secondaryCount": 3475,
+      "missingFromPrimary": 13,
+      "missingFromSecondary": 1
+    }
+  ],
+  "crossCheckFiles": "data/raw/crosscheck/*.json",
+  "generatedAt": "2026-04-15T09:42:29.064Z"
+}

@@ -1,0 +1,14 @@
+[
+  { "word": "日本", "reading": "にほん", "glosses": ["Japan"] },
+  { "word": "水", "reading": "みず", "glosses": ["water"] },
+  { "word": "食べる", "reading": "たべる", "glosses": ["to eat"] },
+  { "word": "学校", "reading": "がっこう", "glosses": ["school"] },
+  { "word": "先生", "reading": "せんせい", "glosses": ["teacher"] },
+  { "word": "学生", "reading": "がくせい", "glosses": ["student"] },
+  { "word": "今日", "reading": "きょう", "glosses": ["today"] },
+  { "word": "明日", "reading": "あした", "glosses": ["tomorrow"] },
+  { "word": "大きい", "reading": "おおきい", "glosses": ["big"] },
+  { "word": "小さい", "reading": "ちいさい", "glosses": ["small"] },
+  { "word": "友達", "reading": "ともだち", "glosses": ["friend"] },
+  { "word": "行く", "reading": "いく", "glosses": ["to go"] }
+]

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { Geist, Geist_Mono } from "next/font/google";
 import BottomNav from "@/components/layout/BottomNav";
 import Navbar from "@/components/layout/Navbar";
@@ -19,15 +20,20 @@ export const metadata: Metadata = {
   description: "Plateforme modulaire d entrainement au japonais",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const themeCookie = cookieStore.get("tomakun.theme")?.value;
+  const initialTheme = themeCookie === "light" || themeCookie === "dark" ? themeCookie : undefined;
+
   return (
     <html
       lang="fr"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      data-theme={initialTheme}
     >
       <body className="app-shell min-h-full flex flex-col">
         <Navbar />

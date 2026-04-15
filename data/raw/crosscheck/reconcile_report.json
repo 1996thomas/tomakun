@@ -1,0 +1,27 @@
+{
+  "addedTotal": 1,
+  "queuedTotal": 202,
+  "perLevel": {
+    "N5": {
+      "added": 1,
+      "queued": 53
+    },
+    "N4": {
+      "added": 0,
+      "queued": 54
+    },
+    "N3": {
+      "added": 0,
+      "queued": 49
+    },
+    "N2": {
+      "added": 0,
+      "queued": 33
+    },
+    "N1": {
+      "added": 0,
+      "queued": 13
+    }
+  },
+  "generatedAt": "2026-04-15T09:46:19.050Z"
+}
