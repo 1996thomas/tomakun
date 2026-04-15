@@ -1,16 +1,23 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { useI18n } from "@/lib/i18n";
+
+function QuizLoading() {
+  const { t } = useI18n();
+
+  return (
+    <section className="flex flex-1 flex-col justify-center">
+      <div className="surface-card rounded-xl p-4 shadow-sm">
+        <p className="text-muted text-center text-sm">{t("loading.quiz")}</p>
+      </div>
+    </section>
+  );
+}
 
 const KanaQuiz = dynamic(() => import("@/features/kana-quiz/KanaQuiz"), {
   ssr: false,
-  loading: () => (
-    <section className="flex flex-1 flex-col justify-center">
-      <div className="surface-card rounded-xl p-4 shadow-sm">
-        <p className="text-muted text-center text-sm">Chargement du quiz...</p>
-      </div>
-    </section>
-  ),
+  loading: () => <QuizLoading />,
 });
 
 export default function KanaPageClient() {

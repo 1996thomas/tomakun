@@ -1,0 +1,642 @@
+[
+  {
+    "id": "n5-0001",
+    "structure": "ちゃいけない・じゃいけない",
+    "meaning": "must not do (spoken Japanese)",
+    "example": "ここでタバコを吸っちゃいけないよ。 (Koko de tabako o succha ikenai yo.)",
+    "exampleMeaning": "You must not smoke here.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0002",
+    "structure": "だ・です",
+    "meaning": "to be (am, is, are, were, used to)",
+    "example": "これは本です。 (Kore wa hon desu.)",
+    "exampleMeaning": "This is a book.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0003",
+    "structure": "だけ",
+    "meaning": "only; just; as much as",
+    "example": "水だけください。 (Mizu dake kudasai.)",
+    "exampleMeaning": "Just water, please.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0004",
+    "structure": "だろう",
+    "meaning": "I think; it seems; probably; right?",
+    "example": "彼は来ないだろう。 (Kare wa konai darou.)",
+    "exampleMeaning": "He probably won't come.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0005",
+    "structure": "で",
+    "meaning": "in; at; on; by; with; via",
+    "example": "学校で勉強します。 (Gakkou de benkyou shimasu.)",
+    "exampleMeaning": "I study at school.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0006",
+    "structure": "でも",
+    "meaning": "but; however",
+    "example": "行きたいけど、忙しい。 (Ikitai kedo, isogashii.)",
+    "exampleMeaning": "I want to go, but I'm busy.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0007",
+    "structure": "でしょう",
+    "meaning": "I think; it seems; probably; right?",
+    "example": "明日、雨でしょう。 (Ashita, ame deshou.)",
+    "exampleMeaning": "It will probably rain tomorrow.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0008",
+    "structure": "どんな",
+    "meaning": "what kind of; what sort of",
+    "example": "どんな映画が好き？ (Donna eiga ga suki?)",
+    "exampleMeaning": "What kind of movies do you like?",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0009",
+    "structure": "どうして",
+    "meaning": "why; for what reason; how",
+    "example": "どうして遅れたの？ (Doushite okureta no?)",
+    "exampleMeaning": "Why were you late?",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0010",
+    "structure": "どうやって",
+    "meaning": "how; in what way; by what means",
+    "example": "駅までどうやって行く？ (Eki made douyatte iku?)",
+    "exampleMeaning": "How do you get to the station?",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0011",
+    "structure": "が",
+    "meaning": "subject marker; however; but",
+    "example": "猫が好きです。 (Neko ga suki desu.)",
+    "exampleMeaning": "I like cats.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0012",
+    "structure": "があります",
+    "meaning": "there is; is (non-living things)",
+    "example": "机の上に本があります。 (Tsukue no ue ni hon ga arimasu.)",
+    "exampleMeaning": "There is a book on the desk.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0013",
+    "structure": "がほしい",
+    "meaning": "to want something",
+    "example": "新しい車がほしい。 (Atarashii kuruma ga hoshii.)",
+    "exampleMeaning": "I want a new car.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0014",
+    "structure": "がいます",
+    "meaning": "there is; to be; is (living things)",
+    "example": "庭に犬がいます。 (Niwa ni inu ga imasu.)",
+    "exampleMeaning": "There is a dog in the garden.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0015",
+    "structure": "ほうがいい",
+    "meaning": "had better; it'd be better to; should",
+    "example": "早く寝たほうがいいよ。 (Hayaku neta hou ga ii yo.)",
+    "exampleMeaning": "You should go to bed early.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0016",
+    "structure": "い-adjectives",
+    "meaning": "i-adjectives",
+    "example": "このケーキはおいしい。 (Kono keeki wa oishii.)",
+    "exampleMeaning": "This cake is delicious.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0017",
+    "structure": "一番",
+    "meaning": "the most; the best",
+    "example": "これが一番おいしい。 (Kore ga ichiban oishii.)",
+    "exampleMeaning": "This is the most delicious.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0018",
+    "structure": "一緒に",
+    "meaning": "together",
+    "example": "友達と一緒に映画を見ました。 (Tomodachi to issho ni eiga o mimashita.)",
+    "exampleMeaning": "I watched a movie with my friend.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0019",
+    "structure": "いつも",
+    "meaning": "always; usually; habitually",
+    "example": "いつも朝ごはんを食べます。 (Itsumo asagohan o tabemasu.)",
+    "exampleMeaning": "I always eat breakfast.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0020",
+    "structure": "じゃない・ではない",
+    "meaning": "to not be (am not; is not; are not)",
+    "example": "これは猫じゃない。 (Kore wa neko janai.)",
+    "exampleMeaning": "This is not a cat.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0021",
+    "structure": "か",
+    "meaning": "question particle",
+    "example": "これ、食べますか？ (Kore, tabemasu ka?)",
+    "exampleMeaning": "Will you eat this?",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0022",
+    "structure": "か〜か",
+    "meaning": "or",
+    "example": "コーヒーか紅茶？ (Koohii ka koucha?)",
+    "exampleMeaning": "Coffee or tea?",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0023",
+    "structure": "から",
+    "meaning": "because; since; from",
+    "example": "疲れたから休みます。 (Tsukareta kara yasumimasu.)",
+    "exampleMeaning": "I'm tired, so I'll rest.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0024",
+    "structure": "方",
+    "meaning": "the way of doing something; how to do",
+    "example": "この漢字の書き方を教えて。 (Kono kanji no kakikata o oshiete.)",
+    "exampleMeaning": "Teach me how to write this kanji.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0025",
+    "structure": "けど",
+    "meaning": "but; however; although",
+    "example": "行きたいけど、お金がない。 (Ikitai kedo, okane ga nai.)",
+    "exampleMeaning": "I want to go, but I have no money.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0026",
+    "structure": "けれども",
+    "meaning": "but; however; although",
+    "example": "忙しいけれども、会いたい。 (Isogashii keredomo, aitai.)",
+    "exampleMeaning": "I'm busy, but I want to meet.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0027",
+    "structure": "まだ",
+    "meaning": "still; not yet",
+    "example": "まだ宿題が終わっていない。 (Mada shukudai ga owatte inai.)",
+    "exampleMeaning": "I haven't finished my homework yet.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0028",
+    "structure": "まだ〜ていません",
+    "meaning": "have not yet",
+    "example": "まだ食べていません。 (Mada tabete imasen.)",
+    "exampleMeaning": "I haven't eaten yet.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0029",
+    "structure": "まで",
+    "meaning": "until ~; as far as ~; to (an extent); even ~",
+    "example": "駅まで歩きます。 (Eki made arukimasu.)",
+    "exampleMeaning": "I'll walk to the station.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0030",
+    "structure": "前に",
+    "meaning": "before ~; in front of ~",
+    "example": "寝る前に本を読みます。 (Neru mae ni hon o yomimasu.)",
+    "exampleMeaning": "I read a book before going to bed.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0031",
+    "structure": "ませんか",
+    "meaning": "would you; do you want to; shall we",
+    "example": "一緒に行きませんか？ (Issho ni ikimasen ka?)",
+    "exampleMeaning": "Shall we go together?",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0032",
+    "structure": "ましょう",
+    "meaning": "let's ; shall we ~",
+    "example": "映画を見ましょう。 (Eiga o mimashou.)",
+    "exampleMeaning": "Let's watch a movie.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0033",
+    "structure": "ましょうか",
+    "meaning": "shall I ~; used to offer help to the listener",
+    "example": "荷物を持ちましょうか？ (Nimotsu o mochimashou ka?)",
+    "exampleMeaning": "Shall I carry your luggage?",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0034",
+    "structure": "も",
+    "meaning": "too; also; as well",
+    "example": "私も行きます。 (Watashi mo ikimasu.)",
+    "exampleMeaning": "I'll go too.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0035",
+    "structure": "もう",
+    "meaning": "already; anymore; again; other",
+    "example": "もう食べました。 (Mou tabemashita.)",
+    "exampleMeaning": "I already ate.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0036",
+    "structure": "な-adjectives",
+    "meaning": "na-adjectives",
+    "example": "この部屋は静かな。 (Kono heya wa shizuka na.)",
+    "exampleMeaning": "This room is quiet.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0037",
+    "structure": "なあ",
+    "meaning": "sentence ending particle; confirmation; admiration, etc",
+    "example": "いい天気だなあ。 (Ii tenki da naa.)",
+    "exampleMeaning": "Nice weather, isn't it?",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0038",
+    "structure": "ないで",
+    "meaning": "without doing ; To do [B] without doing [A]",
+    "example": "歯を磨かないで寝ました。 (Ha o migakanaide nemashita.)",
+    "exampleMeaning": "I went to bed without brushing my teeth.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0039",
+    "structure": "ないでください",
+    "meaning": "please don't do",
+    "example": "ここで写真を撮らないでください。 (Koko de shashin o toranaide kudasai.)",
+    "exampleMeaning": "Please don't take photos here.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0040",
+    "structure": "なくてもいい",
+    "meaning": "don't have to",
+    "example": "急がなくてもいいよ。 (Isoganakutemo ii yo.)",
+    "exampleMeaning": "You don't have to hurry.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0041",
+    "structure": "なくちゃ",
+    "meaning": "must do; need to; gotta do",
+    "example": "宿題をやらなくちゃ。 (Shukudai o yaranakucha.)",
+    "exampleMeaning": "I gotta do my homework.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0042",
+    "structure": "なくてはいけない",
+    "meaning": "must do; need to do",
+    "example": "毎日勉強しなくてはいけない。 (Mainichi benkyou shinakute wa ikenai.)",
+    "exampleMeaning": "I must study every day.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0043",
+    "structure": "なくてはならない",
+    "meaning": "must do; need to do",
+    "example": "この仕事はやらなくてはならない。 (Kono shigoto wa yaranakute wa naranai.)",
+    "exampleMeaning": "This work must be done.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0044",
+    "structure": "なる",
+    "meaning": "to become",
+    "example": "天気が悪くなりました。 (Tenki ga waruku narimashita.)",
+    "exampleMeaning": "The weather became bad.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0045",
+    "structure": "んです",
+    "meaning": "to explain something; show emphasis",
+    "example": "遅れたんです。 (Okureta ndesu.)",
+    "exampleMeaning": "I was late (and that's why).",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0046",
+    "structure": "ね",
+    "meaning": "isn't it? right? eh?",
+    "example": "かわいいね！ (Kawaii ne!)",
+    "exampleMeaning": "It's cute, isn't it?",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0047",
+    "structure": "に",
+    "meaning": "destination particle; in; at; on; to",
+    "example": "日本に行きます。 (Nihon ni ikimasu.)",
+    "exampleMeaning": "I'm going to Japan.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0048",
+    "structure": "にいく",
+    "meaning": "go to do",
+    "example": "買い物に行きます。 (Kaimono ni ikimasu.)",
+    "exampleMeaning": "I'm going shopping.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0049",
+    "structure": "にする",
+    "meaning": "to decide on",
+    "example": "ピザにします。 (Piza ni shimasu.)",
+    "exampleMeaning": "I'll decide on pizza.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0050",
+    "structure": "に/へ",
+    "meaning": "to (indicates direction / destination)",
+    "example": "学校へ行きます。 (Gakkou e ikimasu.)",
+    "exampleMeaning": "I'm going to school.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0051",
+    "structure": "の",
+    "meaning": "possessive particle",
+    "example": "私の本です。 (Watashi no hon desu.)",
+    "exampleMeaning": "It's my book.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0052",
+    "structure": "のです",
+    "meaning": "to explain something; show emphasis",
+    "example": "行きたいのです。 (Ikitai no desu.)",
+    "exampleMeaning": "I want to go (that's the reason).",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0053",
+    "structure": "のが下手",
+    "meaning": "to be bad at doing something",
+    "example": "私は歌うのが下手です。 (Watashi wa utau no ga heta desu.)",
+    "exampleMeaning": "I'm bad at singing.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0054",
+    "structure": "のが上手",
+    "meaning": "to be good at",
+    "example": "彼は料理するのが上手です。 (Kare wa ryouri suru no ga jouzu desu.)",
+    "exampleMeaning": "He is good at cooking.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0055",
+    "structure": "のが好き",
+    "meaning": "to like doing something",
+    "example": "本を読むのが好きです。 (Hon o yomu no ga suki desu.)",
+    "exampleMeaning": "I like reading books.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0056",
+    "structure": "の中で[A]が一番",
+    "meaning": "out of this group, [A] is best",
+    "example": "この中でりんごが一番好き。 (Kono naka de ringo ga ichiban suki.)",
+    "exampleMeaning": "Among these, I like apples the best.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0057",
+    "structure": "ので",
+    "meaning": "because of; given that; since",
+    "example": "雨が降るので傘を持って行きます。 (Ame ga furu node kasa o motte ikimasu.)",
+    "exampleMeaning": "Since it's raining, I'll bring an umbrella.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0058",
+    "structure": "を",
+    "meaning": "object marker particle",
+    "example": "りんごを食べます。 (Ringo o tabemasu.)",
+    "exampleMeaning": "I eat an apple.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0059",
+    "structure": "をください",
+    "meaning": "please give me",
+    "example": "水をください。 (Mizu o kudasai.)",
+    "exampleMeaning": "Please give me water.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0060",
+    "structure": "しかし",
+    "meaning": "but; however",
+    "example": "行きたかった。しかし、時間がない。 (Ikitakatta. Shikashi, jikan ga nai.)",
+    "exampleMeaning": "I wanted to go. However, I have no time.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0061",
+    "structure": "すぎる",
+    "meaning": "too much",
+    "example": "食べすぎると太ります。 (Tabesugiru to futorimasu.)",
+    "exampleMeaning": "If you eat too much, you'll gain weight.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0062",
+    "structure": "たことがある",
+    "meaning": "to have done something before",
+    "example": "日本に行ったことがあります。 (Nihon ni itta koto ga arimasu.)",
+    "exampleMeaning": "I have been to Japan.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0063",
+    "structure": "たい",
+    "meaning": "want to do something",
+    "example": "泳ぎたいです。 (Oyogitai desu.)",
+    "exampleMeaning": "I want to swim.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0064",
+    "structure": "たり〜たり",
+    "meaning": "do such things as A and B",
+    "example": "買い物したり、映画を見たりします。 (Kaimono shitari, eiga o mitari shimasu.)",
+    "exampleMeaning": "I do things like shopping and watching movies.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0065",
+    "structure": "てある",
+    "meaning": "is/has been done (resulting state)",
+    "example": "窓が開けてあります。 (Mado ga akete arimasu.)",
+    "exampleMeaning": "The window has been opened.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0066",
+    "structure": "ている",
+    "meaning": "ongoing action or current state",
+    "example": "今、本を読んでいます。 (Ima, hon o yonde imasu.)",
+    "exampleMeaning": "I am reading a book now.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0067",
+    "structure": "てから",
+    "meaning": "after doing~",
+    "example": "宿題をしてから遊びます。 (Shukudai o shite kara asobimasu.)",
+    "exampleMeaning": "I'll play after doing my homework.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0068",
+    "structure": "てください",
+    "meaning": "please do",
+    "example": "座ってください。 (Suwatte kudasai.)",
+    "exampleMeaning": "Please sit down.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0069",
+    "structure": "てはいけない",
+    "meaning": "must not; may not; cannot",
+    "example": "ここで走ってはいけません。 (Koko de hashitte wa ikemasen.)",
+    "exampleMeaning": "You must not run here.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0070",
+    "structure": "てもいいです",
+    "meaning": "is OK to..; is alright to..; may I..?",
+    "example": "ここに座ってもいいですか？ (Koko ni suwatte mo ii desu ka?)",
+    "exampleMeaning": "Is it okay if I sit here?",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0071",
+    "structure": "と",
+    "meaning": "and; with; as; connecting particle",
+    "example": "犬と猫がいます。 (Inu to neko ga imasu.)",
+    "exampleMeaning": "There are dogs and cats.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0072",
+    "structure": "とき",
+    "meaning": "when; at this time",
+    "example": "子供のとき、よく遊んだ。 (Kodomo no toki, yoku asonda.)",
+    "exampleMeaning": "When I was a child, I played a lot.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0073",
+    "structure": "とても",
+    "meaning": "very; awfully; exceedingly",
+    "example": "とても疲れました。 (Totemo tsukaremashita.)",
+    "exampleMeaning": "I'm very tired.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0074",
+    "structure": "つもり",
+    "meaning": "plan to ~; intend to ~",
+    "example": "明日、図書館に行くつもりです。 (Ashita, toshokan ni iku tsumori desu.)",
+    "exampleMeaning": "I plan to go to the library tomorrow.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0075",
+    "structure": "は",
+    "meaning": "topic marker",
+    "example": "私は学生です。 (Watashi wa gakusei desu.)",
+    "exampleMeaning": "I am a student.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0076",
+    "structure": "は〜より・・・です",
+    "meaning": "[A] is more ~ than [B]",
+    "example": "猫は犬よりかわいいです。 (Neko wa inu yori kawaii desu.)",
+    "exampleMeaning": "Cats are cuter than dogs.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0077",
+    "structure": "はどうですか",
+    "meaning": "how about; how is",
+    "example": "このレストランはどうですか？ (Kono resutoran wa dou desu ka?)",
+    "exampleMeaning": "How about this restaurant?",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0078",
+    "structure": "や",
+    "meaning": "and; or; connecting particle",
+    "example": "りんごやバナナを買いました。 (Ringo ya banana o kaimashita.)",
+    "exampleMeaning": "I bought apples and bananas.",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0079",
+    "structure": "よ",
+    "meaning": "you know; emphasis (ending particle)",
+    "example": "おいしいよ！ (Oishii yo!)",
+    "exampleMeaning": "It's delicious, you know!",
+    "level": "N5"
+  },
+  {
+    "id": "n5-0080",
+    "structure": "より〜ほうが",
+    "meaning": "[A] is more than [B]",
+    "example": "コーヒーより紅茶のほうが好きです。 (Koohii yori koucha no hou ga suki desu.)",
+    "exampleMeaning": "I like tea more than coffee.",
+    "level": "N5"
+  }
+]

@@ -1,0 +1,41 @@
+{
+  "generatedAt": "2026-04-15T12:51:05.312Z",
+  "totalRaw": 165,
+  "totalProcessed": 161,
+  "countsByLevel": {
+    "N5": 80,
+    "N4": 81,
+    "N3": 0,
+    "N2": 0,
+    "N1": 0
+  },
+  "confidenceByLevel": {
+    "N5": {
+      "high": 0,
+      "medium": 80,
+      "low": 0
+    },
+    "N4": {
+      "high": 0,
+      "medium": 81,
+      "low": 0
+    },
+    "N3": {
+      "high": 0,
+      "medium": 0,
+      "low": 0
+    },
+    "N2": {
+      "high": 0,
+      "medium": 0,
+      "low": 0
+    },
+    "N1": {
+      "high": 0,
+      "medium": 0,
+      "low": 0
+    }
+  },
+  "invalidRows": 0,
+  "deduplicatedRows": 4
+}

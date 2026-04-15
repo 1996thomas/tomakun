@@ -1,0 +1,27 @@
+{
+  "generatedAt": "2026-04-15T12:51:04.986Z",
+  "sources": [
+    {
+      "sourceId": "jlpt-grammar-api",
+      "sourceName": "JLPT Grammar API",
+      "sourceUrl": "https://jlpt-grammar-api.vercel.app/api/grammar",
+      "levelsAvailable": [
+        "N5",
+        "N4"
+      ],
+      "levelsMissing": [
+        "N3",
+        "N2",
+        "N1"
+      ]
+    }
+  ],
+  "countsByLevel": {
+    "N5": 80,
+    "N4": 85,
+    "N3": 0,
+    "N2": 0,
+    "N1": 0
+  },
+  "totalImported": 165
+}

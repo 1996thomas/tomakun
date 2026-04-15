@@ -9,7 +9,9 @@
     "lint": "eslint",
     "build:vocab": "tsx scripts/build-vocab.ts",
     "import:n5": "tsx scripts/import-n5-source.ts",
-    "reconcile:vocab": "tsx scripts/reconcile-crosscheck.ts"
+    "reconcile:vocab": "tsx scripts/reconcile-crosscheck.ts",
+    "import:grammar": "tsx scripts/import-grammar-sources.ts",
+    "build:grammar": "tsx scripts/build-grammar.ts"
   },
   "dependencies": {
     "lucide-react": "^1.8.0",

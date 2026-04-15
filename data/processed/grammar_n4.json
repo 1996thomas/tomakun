@@ -1,0 +1,650 @@
+[
+  {
+    "id": "n4-0001",
+    "structure": "〜し、〜し",
+    "meaning": "expressing multiple reasons or repeating similar things",
+    "example": "ラーメンはかんたんにできるし、安いし、おいしい。 (Raamen wa kantan ni dekiru shi, yasui shi, oishii.)",
+    "exampleMeaning": "Ramen is easy to cook, cheap and delicious.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0002",
+    "structure": "〜て",
+    "meaning": "a cause or reason",
+    "example": "しゅくだいをわすれたので、先生にしかられた。 (Shukudai o wasureta node, sensei ni shikarareta.)",
+    "exampleMeaning": "The teacher scolded me for forgetting to do my homework.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0003",
+    "structure": "〜んです",
+    "meaning": "explanation, reason",
+    "example": "A: どうしたんですか。 B: 頭がいたいんです。 (A: Doushita n desu ka. B: Atama ga itai n desu.)",
+    "exampleMeaning": "A: What's the matter? B: My head hurts.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0004",
+    "structure": "そこで",
+    "meaning": "therefore/that's why",
+    "example": "ここはコーヒーが100円です。だから、人がたくさん来てる。 (Koko wa koohii ga 100 en desu. Dakara, hito ga takusan kiteru.)",
+    "exampleMeaning": "The coffee is 100Yen here. That's why it's popular.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0005",
+    "structure": "〜ので",
+    "meaning": "because..., ...so",
+    "example": "何かしなくてはいけない。だから、しんぱいします。 (Nanika shinakute wa ikenai. Dakara, shinpai shimasu.)",
+    "exampleMeaning": "There's something I need to do, so excuse me for leaving before you.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0006",
+    "structure": "〜てあげる",
+    "meaning": "doing something for someone else",
+    "example": "ルームメートに、料理を作ってあげました。 (Ruumumeeto ni, ryouri o tsukutte agemashita.)",
+    "exampleMeaning": "I cooked a dish for my roommate.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0007",
+    "structure": "〜てくれる",
+    "meaning": "something is done by someone for me or my family",
+    "example": "わかい人が、にもつを持ってくれました。 (Wakai hito ga, nimotsu o motte kuremashita.)",
+    "exampleMeaning": "A young man held my luggage.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0008",
+    "structure": "〜てもらう",
+    "meaning": "something is done by someone for me or my family",
+    "example": "田中さんに、ノートを貸してもらった。 (Tanaka-san ni, nooto o kashite moratta.)",
+    "exampleMeaning": "Mr.Tanaka lent me his notebook.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0009",
+    "structure": "〜てくれませんか / 〜ていただけませんか",
+    "meaning": "Could you...?",
+    "example": "もっとゆっくり話してくれませんか。もっとゆっくり話していただけませんか。 (Motto yukkuri hanashite kuremasen ka. Motto yukkuri hanashite itadakemasen ka.)",
+    "exampleMeaning": "I would like to learn more, so would you be so kind as to teach me?",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0010",
+    "structure": "可能形",
+    "meaning": "Verb Potential form",
+    "example": "飲める、食べられる、できる、来られる。 (Nomeru, taberareru, dekiru, korareru.)",
+    "exampleMeaning": "[Potential form] of 'drink, eat, do, come'.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0011",
+    "structure": "命令形",
+    "meaning": "Verb Imperative form",
+    "example": "飲め、食べろ、しろ、来い。 (Nome, tabero, shiro, koi.)",
+    "exampleMeaning": "[Imperative form] of 'drink, eat, do, come'.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0012",
+    "structure": "禁止形",
+    "meaning": "Verb Prohibitive form",
+    "example": "飲むな、食べるな、するな、来るな。 (Nomu na, taberu na, suru na, kuru na.)",
+    "exampleMeaning": "[Prohibitive form] of 'drink, eat, do, come'.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0013",
+    "structure": "条件形",
+    "meaning": "Verb Conditional form",
+    "example": "飲めば、食べれば、すれば、来れば。 (Nomeba, tabereba, sureba, kureba.)",
+    "exampleMeaning": "[Conditional form] of 'drink, eat, do, come'.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0014",
+    "structure": "意向形",
+    "meaning": "Verb Volitional form",
+    "example": "飲もう、食べよう、しよう、来よう。 (Nomou, tabeyou, shiyou, koyou.)",
+    "exampleMeaning": "[Volitional form] of 'drink, eat, do, come'.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0015",
+    "structure": "受身形",
+    "meaning": "Verb Passive form",
+    "example": "飲まれる、食べられる、される、来られる。 (Nomareru, taberareru, sareru, korareru.)",
+    "exampleMeaning": "[Passive form] of 'drink, eat, do, come'.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0016",
+    "structure": "使役形",
+    "meaning": "Verb Causative form",
+    "example": "飲ませる、食べさせる、させる、来させる。 (Nomaseru, tabesaseru, saseru, kosaseru.)",
+    "exampleMeaning": "[Causative form] of 'drink, eat, do, come'.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0017",
+    "structure": "使役受身形",
+    "meaning": "Verb Causative passive form",
+    "example": "飲まされる、食べさせられる、させられる、来させられる。 (Nomasareru, tabesaserareru, saserareru, kosaserareru.)",
+    "exampleMeaning": "[Causative passive form] of 'drink, eat, do, come'.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0018",
+    "structure": "見える/聞こえる",
+    "meaning": "be audible/ be visible",
+    "example": "テレビの音が聞こえる。 (Terebi no oto ga kikoeru.)",
+    "exampleMeaning": "The sound of a TV can be heard.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0019",
+    "structure": "自動詞/他動詞",
+    "meaning": "Intransitive/Transitive Verb",
+    "example": "パソコンがこわれた。 / パソコンをこわしてしまった。 (Pasokon ga kowareta. / Pasokon o kowashite shimatta.)",
+    "exampleMeaning": "The computer is broken. / I broke/destroyed the computer.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0020",
+    "structure": "〜ておく",
+    "meaning": "the state after having done something with a particular purpose",
+    "example": "予定をカレンダーに書いておきます。 (Yotei o karendaa ni kaite okimasu.)",
+    "exampleMeaning": "The schedule is written on the calendar.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0021",
+    "structure": "〜てしまう",
+    "meaning": "emphasis, regret",
+    "example": "ジュースを全部飲んでしまった。 (Juusu o zenbu nonde shimatta.)",
+    "exampleMeaning": "I drink up all the juice that I bought yesterday.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0022",
+    "structure": "いる",
+    "meaning": "the circumstance of remaining effects",
+    "example": "ドアがしまっている。 (Doa ga shimatte iru.)",
+    "exampleMeaning": "The door is locked.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0023",
+    "structure": "〜と言う",
+    "meaning": "(someone) say...",
+    "example": "鈴木さんは、明日休むと言っていました。 (Suzuki-san wa, ashita yasumu to itte imashita.)",
+    "exampleMeaning": "Ms.Suzuki said she would take the day off tomorrow.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0024",
+    "structure": "〜ところ",
+    "meaning": "just about/on the verge of doing something",
+    "example": "今、食べたところです。 (Ima, tabeta tokoro desu.)",
+    "exampleMeaning": "I have just eaten.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0025",
+    "structure": "まえている",
+    "meaning": "still...",
+    "example": "雨が降っているよ。 (Ame ga futte iru yo.)",
+    "exampleMeaning": "It's still raining.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0026",
+    "structure": "〜ばかり",
+    "meaning": "just finished, something just occurred",
+    "example": "君は、会社に入ったばかりじゃない？ (Kimi wa, kaisha ni haitta bakari ja nai?)",
+    "exampleMeaning": "You only joined the new company last month, didn't you?",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0027",
+    "structure": "ほうがいい",
+    "meaning": "you should...",
+    "example": "おふろに入ったほうがいいですよ。 (Ofuro ni haitta hou ga ii desu yo.)",
+    "exampleMeaning": "You shouldn't have a bath.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0028",
+    "structure": "〜なくてもいい",
+    "meaning": "need not do..., don't have to...",
+    "example": "今、しなくてもいいよ。明日でいいよ。 (Ima, shinakute mo ii yo. Ashita de ii yo.)",
+    "exampleMeaning": "You don't have to clean it now. You can do it tomorrow.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0029",
+    "structure": "この/その/あの/どの",
+    "meaning": "to refer to the thing not visible to the speaker or the hearer",
+    "example": "ねえ、この話、知ってる？ 山田さんが結婚したって ！ (Nee, kono hanashi, shitteru? Yamada-san ga kekkon shitatte!)",
+    "exampleMeaning": "Do you know this story? Mr.Yamada is getting married.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0030",
+    "structure": "〜という意味",
+    "meaning": "it mean...",
+    "example": "この漢字は、くつをぬぐという意味です。 (Kono kanji wa, kutsu o nugu to iu imi desu.)",
+    "exampleMeaning": "This kanji means to take off your shoes.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0031",
+    "structure": "〜ないで",
+    "meaning": "without V-ing",
+    "example": "昨晩、勉強しないで寝てしまった。 (Sakuban, benkyou shinai de nete shimatta.)",
+    "exampleMeaning": "Last night, I studied without getting any sleep.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0032",
+    "structure": "小さい/少ない/短い",
+    "meaning": "easy to.../ hard to...",
+    "example": "その手紙は、小さくて読みにくいです。 (Sono tegami wa, chiisakute yominikui desu.)",
+    "exampleMeaning": "The letters are small, so hard to read.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0033",
+    "structure": "あとで",
+    "meaning": "after, later",
+    "example": "仕事のあとで、ご飯を食べに行きます。 (Shigoto no ato de, gohan o tabe ni ikimasu.)",
+    "exampleMeaning": "After work, I go to dinner.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0034",
+    "structure": "〜てから VS 〜あとで",
+    "meaning": "The action continues.",
+    "example": "ご飯を食べたあとで、食べる。食べる。 (Gohan o tabeta ato de, taberu. Taberu.)",
+    "exampleMeaning": "(You don't know if you're done eating your meal. The action continues.)",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0035",
+    "structure": "かえって",
+    "meaning": "before..., by...(time limit)",
+    "example": "レポートを明日までに出してください。 (Repooto o ashita made ni dashite kudasai.)",
+    "exampleMeaning": "Submit your paper by day after tomorrow.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0036",
+    "structure": "〜ながら",
+    "meaning": "while V-ing",
+    "example": "テレビを見ながら、夕ご飯を食べる。 (Terebi o minagara, yuugohan o taberu.)",
+    "exampleMeaning": "I eat dinner while watching TV.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0037",
+    "structure": "〜すぎる",
+    "meaning": "too much",
+    "example": "このズボンは長すぎる。 (Kono zubon wa nagasugiru.)",
+    "exampleMeaning": "This pants are too long for me.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0038",
+    "structure": "しかない",
+    "meaning": "only [Noun] and no other...",
+    "example": "パンしかないよ。おかずがないよ。 (Pan shika nai yo. Okazu ga nai yo.)",
+    "exampleMeaning": "I only have one.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0039",
+    "structure": "下",
+    "meaning": "showing a limit",
+    "example": "10万円以下のような車はありませんか。 (10 man en ika no you na kuruma wa arimasen ka.)",
+    "exampleMeaning": "Is there a car that I can buy for 100,000yen?",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0040",
+    "structure": "〜なんか",
+    "meaning": "..or (colloquial)",
+    "example": "このイベントでは、カラオケなんかゲームをしますよ。 (Kono ibento de wa, karaoke nanka geemu o shimasu yo.)",
+    "exampleMeaning": "At this event we will do things like karaoke or play games.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0041",
+    "structure": "も",
+    "meaning": "or something",
+    "example": "のどがかわきました。お茶でも飲みませんか。 (Nodo ga kawakimashita. Ocha demo nomimasen ka.)",
+    "exampleMeaning": "I'm thirsty. How about drinking tea or something?",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0042",
+    "structure": "+は/も",
+    "meaning": "emphasis or comparison",
+    "example": "母には話します。 (Haha ni wa hanashimasu.)",
+    "exampleMeaning": "I will talk to my mother. ( I won't talk to other people)",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0043",
+    "structure": "+の +",
+    "meaning": "as a nominaliser",
+    "example": "ゲームをするのは、おもしろいです。 (Geemu o suru no wa, omoshiroi desu.)",
+    "exampleMeaning": "It's interesting to play the game.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0044",
+    "structure": "〜と",
+    "meaning": "if..., then",
+    "example": "お酒を飲むと、顔が赤くなるんです。 (Osake o nomu to, kao ga akaku naru n desu.)",
+    "exampleMeaning": "My face turns red when I drink.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0045",
+    "structure": "〜ば",
+    "meaning": "if.. (hypothetical condition)",
+    "example": "この薬を飲めば、よくなりますよ。 (Kono kusuri o nomeba, yoku narimasu yo.)",
+    "exampleMeaning": "If you take this medicine, you will get better.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0046",
+    "structure": "〜たら",
+    "meaning": "if, when, after, once",
+    "example": "テストの結果が悪かったら、どうしよう。 (Tesuto no kekka ga warukattara, dou shiyou.)",
+    "exampleMeaning": "What if my test results are bad?",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0047",
+    "structure": "〜なら",
+    "meaning": "if (giving information)",
+    "example": "大阪に行くなら、たこ焼きを食べてくださいよ。 (Oosaka ni iku nara, takoyaki o tabete kudasai yo.)",
+    "exampleMeaning": "If you're going to Osaka, eat 'takoyaki'.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0048",
+    "structure": "〜のに",
+    "meaning": "even though..",
+    "example": "勉強したのに、テストで0点だった。 (Benkyou shita no ni, tesuto de 0 ten datta.)",
+    "exampleMeaning": "I studied, but I got 0 points on a test.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0049",
+    "structure": "〜ても",
+    "meaning": "even if...",
+    "example": "雨が降っても、行きましょう。 (Ame ga futte mo, ikimashou.)",
+    "exampleMeaning": "Let's go even if it's rains.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0050",
+    "structure": "場合",
+    "meaning": "in the event of, in the case that...",
+    "example": "時間がない場合は、連絡してくださいよ。 (Jikan ga nai baai wa, renraku shite kudasai yo.)",
+    "exampleMeaning": "Please contact us if you can't be there on time.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0051",
+    "structure": "〜ようだ/みたいだ",
+    "meaning": "it seems that...",
+    "example": "せきも出るし、頭もいたい。かぜをひいたようだ。 (Seki mo deru shi, atama mo itai. Kaze o hiita you da.)",
+    "exampleMeaning": "I've got a cough, and my head aches. I might have caught a cold.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0052",
+    "structure": "〜ような",
+    "meaning": "像 (describing things)",
+    "example": "このスープ、からそうですね。 (Kono suupu, kara sou desu ne.)",
+    "exampleMeaning": "This soup looks spicy.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0053",
+    "structure": "〜そう",
+    "meaning": "they say that...(hearsay)",
+    "example": "田中さんは、中国語が話せるそうですよ。 (Tanaka-san wa, chuugokugo ga hanaseru sou desu yo.)",
+    "exampleMeaning": "I hear that Mr.Tanaka can speak Chinese.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0054",
+    "structure": "〜でしょう",
+    "meaning": "it will probably...",
+    "example": "明日は、午後から雨が降るでしょう。 (Ashita wa, gogo kara ame ga furu deshou.)",
+    "exampleMeaning": "It will probably rain tomorrow afternoon.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0055",
+    "structure": "〜と思う",
+    "meaning": "I think...",
+    "example": "それはむずかしいと思いますよ。 (Sore wa muzukashii to omoimasu yo.)",
+    "exampleMeaning": "I think that is extremely difficult.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0056",
+    "structure": "〜かもしれない",
+    "meaning": "may...",
+    "example": "もう少しで、時間に間に合わないかも知れません。 (Mou sukoshi de, jikan ni ma ni awanai kamo shiremasen.)",
+    "exampleMeaning": "We may not be able to make it in time.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0057",
+    "structure": "〜べき",
+    "meaning": "be supposed to be the case",
+    "example": "その店は、開いているはずです。 (Sono mise wa, aite iru hazu desu.)",
+    "exampleMeaning": "That shop must be opened, because today is Monday.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0058",
+    "structure": "〜ない",
+    "meaning": "do.. (command)",
+    "example": "もっとよく聞いてください。 (Motto yoku kiite kudasai.)",
+    "exampleMeaning": "Listen carefully, again.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0059",
+    "structure": "〜なければいけない",
+    "meaning": "must, have to...",
+    "example": "学校では制服を着なければいけません。 (Gakkou de wa seifuku o kinakereba ikemasen.)",
+    "exampleMeaning": "You have to wear a uniform at school.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0060",
+    "structure": "今/今日/会社形",
+    "meaning": "We don't have time, hurry up.",
+    "example": "時間がありません。急いで。 (Jikan ga arimasen. Isoide.)",
+    "exampleMeaning": "We don't have time, hurry up.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0061",
+    "structure": "思う",
+    "meaning": "I think I'll [Verb Volitional-form]",
+    "example": "夏休みは、海に行こうと思っています。 (Natsuyasumi wa, umi ni ikou to omotte imasu.)",
+    "exampleMeaning": "I'm thinking I'll go to the sea for summer vacation.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0062",
+    "structure": "予定",
+    "meaning": "schedule",
+    "example": "3時に、部長と会う予定があります。 (3 ji ni, buchou to au yotei ga arimasu.)",
+    "exampleMeaning": "I have scheduled a meeting with the manager at 3:00.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0063",
+    "structure": "〜つもり",
+    "meaning": "intent/plan to...",
+    "example": "来年、日本に行くつもりです。 (Rainen, Nihon ni iku tsumori desu.)",
+    "exampleMeaning": "I'm going to go to Japan next year.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0064",
+    "structure": "〜てみる",
+    "meaning": "try to do",
+    "example": "この服、着てみたいです。 (Kono fuku, kite mitai desu.)",
+    "exampleMeaning": "May I try this cloth?",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0065",
+    "structure": "〜ように",
+    "meaning": "so that, in order to",
+    "example": "みんなに聞こえるように、大きくてください。 (Minna ni kikoeru you ni, ookiku shite kudasai.)",
+    "exampleMeaning": "Please say it so everyone can hear.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0066",
+    "structure": "〜ために",
+    "meaning": "for.., in order to...",
+    "example": "速く走れるために、毎日練習しています。 (Hayaku hashireru tame ni, mainichi renshuu shite imasu.)",
+    "exampleMeaning": "I'm practicing every day in order to become able to run faster.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0067",
+    "structure": "〜ようになる",
+    "meaning": "to reach the point that/ to come to be that/ to turn into",
+    "example": "英語が話せるようになりましたか。 (Eigo ga hanaseru you ni narimashita ka.)",
+    "exampleMeaning": "Are you able to speak English now?",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0068",
+    "structure": "〜になることにする",
+    "meaning": "has been decided",
+    "example": "父が入院することになりました。 (Chichi ga nyuuin suru koto ni narimashita.)",
+    "exampleMeaning": "My father has been hospitalized.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0069",
+    "structure": "〜がする",
+    "meaning": "can hear, see, smell",
+    "example": "彼らが興奮して話すのが聞こえる。 (Karera ga koufun shite hanasu no ga kikoeru.)",
+    "exampleMeaning": "They are talking excitedly.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0070",
+    "structure": "〜ようにする",
+    "meaning": "making a conscious effort to do something",
+    "example": "毎日運動し、健康的な食事を取るようにしています。 (Mainichi undou shi, kenkouteki na shokuji o toru you ni shite imasu.)",
+    "exampleMeaning": "I try to exercise every day and eat a wide range of foods.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0071",
+    "structure": "〜(に)する/にする",
+    "meaning": "turn/make to do, decide to do",
+    "example": "今年は、国に帰らないことにしました。 (Kotoshi wa, kuni ni kaeranai koto ni shimashita.)",
+    "exampleMeaning": "I've decided not to go back to my country this year.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0072",
+    "structure": "〜から/できている",
+    "meaning": "made from/of",
+    "example": "このテーブルは木からできています。 (Kono teeburu wa ki kara dekite imasu.)",
+    "exampleMeaning": "This table is made of wood.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0073",
+    "structure": "〜てくる",
+    "meaning": "get.., come ..",
+    "example": "コンビニに行ってきます。 (Konbini ni itte kimasu.)",
+    "exampleMeaning": "I'm going to the convenience store.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0074",
+    "structure": "〜か",
+    "meaning": "..what/when/where/who/how..",
+    "example": "今、何時かわかりますか？ (Ima, nanji ka wakarimasu ka?)",
+    "exampleMeaning": "Do you know what time it is now?",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0075",
+    "structure": "〜かどうか",
+    "meaning": "whether it's ..or not",
+    "example": "おいしいかどうか、わからないから、食べない。 (Oishii ka dou ka, wakaranai kara, tabenai.)",
+    "exampleMeaning": "We won't know if it's good or not until we eat it.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0076",
+    "structure": "く",
+    "meaning": "an Adjective to turn into a Noun",
+    "example": "この山の高さをしっていますか。 (Kono yama no takasa o shitte imasu ka.)",
+    "exampleMeaning": "Do you know how high Mt.Fuji is?",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0077",
+    "structure": "+[Verb]",
+    "meaning": "Please write a bigger.",
+    "example": "もっと大きく書いてください。 (Motto ookiku kaite kudasai.)",
+    "exampleMeaning": "Please write with a bigger.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0078",
+    "structure": "敬語",
+    "meaning": "honorific expressions",
+    "example": "To show your respect to particular people's actions (Tokushuu keigo ni tsuite.)",
+    "exampleMeaning": "To show your respect to particular people's actions.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0079",
+    "structure": "謙譲語",
+    "meaning": "Humble expressions",
+    "example": "この本は大統領からいただいたものです。 (Kono hon wa daitouryou kara itadaita mono desu.)",
+    "exampleMeaning": "I was given this book by the president.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0080",
+    "structure": "〜ておる/〜ておく/ 〜ておる/",
+    "meaning": "Receiving, Giving honorific",
+    "example": "社長が 電話 とってくださいました。 (Shachou ga denwa totte kudasaimashita.)",
+    "exampleMeaning": "The president made time for me.",
+    "level": "N4"
+  },
+  {
+    "id": "n4-0081",
+    "structure": "でください/いただけますか",
+    "meaning": "Would you please let me do..?",
+    "example": "明日、休ませてくださいませんか。 (Ashita, yasumashite kudasaimasen ka.)",
+    "exampleMeaning": "Would you please let me get a day off tomorrow?",
+    "level": "N4"
+  }
+]

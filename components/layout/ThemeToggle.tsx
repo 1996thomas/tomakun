@@ -2,6 +2,7 @@
 
 import { useSyncExternalStore } from "react";
 import { Moon, Sun } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
 
 type ThemeMode = "light" | "dark";
 
@@ -25,6 +26,7 @@ function persistTheme(theme: ThemeMode): void {
 }
 
 export default function ThemeToggle() {
+  const { t } = useI18n();
   const theme = useSyncExternalStore(
     (onStoreChange) => {
       if (typeof window === "undefined") return () => {};
@@ -71,8 +73,8 @@ export default function ThemeToggle() {
       type="button"
       onClick={toggleTheme}
       className="btn-option inline-flex h-8 w-8 items-center justify-center rounded-lg"
-      aria-label={theme === "dark" ? "Activer le theme clair" : "Activer le theme sombre"}
-      title={theme === "dark" ? "Theme clair" : "Theme sombre"}
+      aria-label={theme === "dark" ? t("theme.toLight") : t("theme.toDark")}
+      title={theme === "dark" ? t("theme.light") : t("theme.dark")}
     >
       {theme === "dark" ? (
         <Sun className="h-4 w-4" aria-hidden="true" />
