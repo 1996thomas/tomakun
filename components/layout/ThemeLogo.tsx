@@ -12,17 +12,24 @@ function subscribe(onStoreChange: () => void): () => void {
     if (e.key === STORAGE_KEY || e.key === null) onStoreChange();
   };
   const onThemeEvent = () => onStoreChange();
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const onMediaChange = () => onStoreChange();
   window.addEventListener("storage", onStorage);
   window.addEventListener(THEME_EVENT, onThemeEvent);
+  media.addEventListener("change", onMediaChange);
   return () => {
     window.removeEventListener("storage", onStorage);
     window.removeEventListener(THEME_EVENT, onThemeEvent);
+    media.removeEventListener("change", onMediaChange);
   };
 }
 
 function getSnapshot(): "light" | "dark" {
   if (typeof document === "undefined") return "light";
-  return document.documentElement.dataset.theme === "dark" ? "dark" : "light";
+  const explicitTheme = document.documentElement.dataset.theme;
+  if (explicitTheme === "dark") return "dark";
+  if (explicitTheme === "light") return "light";
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 
 export default function ThemeLogo() {
