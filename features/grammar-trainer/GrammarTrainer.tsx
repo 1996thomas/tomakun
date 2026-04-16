@@ -29,14 +29,6 @@ import { useI18n } from "@/lib/i18n";
 const LEVELS: JLPTLevel[] = ["N5", "N4", "N3", "N2", "N1"];
 const SET_SIZES = [5, 10, 20, 30] as const;
 
-const grammarByLevel: Record<JLPTLevel, GrammarPoint[]> = {
-  N5: [],
-  N4: [],
-  N3: [],
-  N2: [],
-  N1: [],
-};
-
 const grammarLevelLoaders: Record<JLPTLevel, () => Promise<GrammarPoint[]>> = {
   N5: () => import("@/data/processed/grammar_n5.json").then((mod) => mod.default as GrammarPoint[]),
   N4: () => import("@/data/processed/grammar_n4.json").then((mod) => mod.default as GrammarPoint[]),
@@ -104,7 +96,7 @@ export default function GrammarTrainer() {
   const tr = (frText: string, enText: string) => (locale === "fr" ? frText : enText);
   const [targetLevel, setTargetLevel] = useState<JLPTLevel>("N5");
   const [loadedGrammarByLevel, setLoadedGrammarByLevel] =
-    useState<Partial<Record<JLPTLevel, GrammarPoint[]>>>(grammarByLevel);
+    useState<Partial<Record<JLPTLevel, GrammarPoint[]>>>({});
   const [isCumulative, setIsCumulative] = useState(true);
   const [setSize, setSetSize] = useState<number>(10);
   const [session, setSession] = useState<GrammarPoint[]>([]);
@@ -135,7 +127,7 @@ export default function GrammarTrainer() {
   );
 
   const ensureGrammarLevelsLoaded = useCallback(async (levels: JLPTLevel[]) => {
-    const missing = levels.filter((level) => !loadedGrammarByLevel[level]);
+    const missing = levels.filter((level) => loadedGrammarByLevel[level] === undefined);
     if (missing.length === 0) return;
     const entries = await Promise.all(
       missing.map(async (level) => [level, await grammarLevelLoaders[level]()] as const),

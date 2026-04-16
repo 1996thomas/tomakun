@@ -44,14 +44,6 @@ let cachedCareerSnapshot: VocabCareerState = DEFAULT_CAREER_STATE;
 let cachedSavedVocabRaw: string | null | undefined;
 let cachedSavedVocabSnapshot = loadSavedVocabSession();
 
-const vocabByLevel: Record<JLPTLevel, Vocab[]> = {
-  N5: [],
-  N4: [],
-  N3: [],
-  N2: [],
-  N1: [],
-};
-
 const vocabLevelLoaders: Record<JLPTLevel, () => Promise<Vocab[]>> = {
   N5: () => import("@/data/processed/vocab_n5.json").then((mod) => mod.default as Vocab[]),
   N4: () => import("@/data/processed/vocab_n4.json").then((mod) => mod.default as Vocab[]),
@@ -309,7 +301,7 @@ export default function VocabFlashcards() {
   const tr = (frText: string, enText: string) => (locale === "fr" ? frText : enText);
   const [studyMode, setStudyMode] = useState<StudyMode>("career");
   const [loadedVocabByLevel, setLoadedVocabByLevel] =
-    useState<Partial<Record<JLPTLevel, Vocab[]>>>(vocabByLevel);
+    useState<Partial<Record<JLPTLevel, Vocab[]>>>({});
   const [targetLevel, setTargetLevel] = useState<JLPTLevel>("N5");
   const [isCumulativeMode, setIsCumulativeMode] = useState(true);
   const [setSize, setSetSize] = useState<number>(20);
@@ -384,7 +376,7 @@ export default function VocabFlashcards() {
   );
 
   const ensureVocabLevelsLoaded = useCallback(async (levels: JLPTLevel[]) => {
-    const missing = levels.filter((level) => !loadedVocabByLevel[level]);
+    const missing = levels.filter((level) => loadedVocabByLevel[level] === undefined);
     if (missing.length === 0) return;
     const entries = await Promise.all(
       missing.map(async (level) => [level, await vocabLevelLoaders[level]()] as const),
