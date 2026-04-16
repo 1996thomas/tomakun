@@ -6,11 +6,6 @@ import { RotateCcw, CircleDashed, Check, Zap, CircleHelp, X } from "lucide-react
 import AnswerFeedback from "@/components/feedback/AnswerFeedback";
 import type { JLPTLevel, Vocab } from "@/types/vocab";
 import type { ReviewRating, VocabProgressItem, VocabProgressMap } from "@/types/vocab-progress";
-import vocabN1Json from "@/data/processed/vocab_n1.json";
-import vocabN2Json from "@/data/processed/vocab_n2.json";
-import vocabN3Json from "@/data/processed/vocab_n3.json";
-import vocabN4Json from "@/data/processed/vocab_n4.json";
-import vocabN5Json from "@/data/processed/vocab_n5.json";
 import { applyReview, createInitialProgress } from "@/lib/srs";
 import { saveVocabProgress } from "@/lib/vocab-progress.storage";
 import {
@@ -50,11 +45,19 @@ let cachedSavedVocabRaw: string | null | undefined;
 let cachedSavedVocabSnapshot = loadSavedVocabSession();
 
 const vocabByLevel: Record<JLPTLevel, Vocab[]> = {
-  N5: vocabN5Json as Vocab[],
-  N4: vocabN4Json as Vocab[],
-  N3: vocabN3Json as Vocab[],
-  N2: vocabN2Json as Vocab[],
-  N1: vocabN1Json as Vocab[],
+  N5: [],
+  N4: [],
+  N3: [],
+  N2: [],
+  N1: [],
+};
+
+const vocabLevelLoaders: Record<JLPTLevel, () => Promise<Vocab[]>> = {
+  N5: () => import("@/data/processed/vocab_n5.json").then((mod) => mod.default as Vocab[]),
+  N4: () => import("@/data/processed/vocab_n4.json").then((mod) => mod.default as Vocab[]),
+  N3: () => import("@/data/processed/vocab_n3.json").then((mod) => mod.default as Vocab[]),
+  N2: () => import("@/data/processed/vocab_n2.json").then((mod) => mod.default as Vocab[]),
+  N1: () => import("@/data/processed/vocab_n1.json").then((mod) => mod.default as Vocab[]),
 };
 
 const RATING_BUTTONS: Array<{
@@ -88,11 +91,14 @@ function shuffle<T>(items: T[]): T[] {
   return result;
 }
 
-function getCumulativeDataset(targetLevel: JLPTLevel): Vocab[] {
+function getCumulativeDataset(
+  targetLevel: JLPTLevel,
+  byLevel: Partial<Record<JLPTLevel, Vocab[]>>,
+): Vocab[] {
   const limit = LEVELS.indexOf(targetLevel);
   const all: Vocab[] = [];
   for (let i = 0; i <= limit; i += 1) {
-    all.push(...vocabByLevel[LEVELS[i]]);
+    all.push(...(byLevel[LEVELS[i]] ?? []));
   }
   return all;
 }
@@ -302,6 +308,8 @@ export default function VocabFlashcards() {
   const { locale } = useI18n();
   const tr = (frText: string, enText: string) => (locale === "fr" ? frText : enText);
   const [studyMode, setStudyMode] = useState<StudyMode>("career");
+  const [loadedVocabByLevel, setLoadedVocabByLevel] =
+    useState<Partial<Record<JLPTLevel, Vocab[]>>>(vocabByLevel);
   const [targetLevel, setTargetLevel] = useState<JLPTLevel>("N5");
   const [isCumulativeMode, setIsCumulativeMode] = useState(true);
   const [setSize, setSetSize] = useState<number>(20);
@@ -375,13 +383,39 @@ export default function VocabFlashcards() {
     () => null,
   );
 
+  const ensureVocabLevelsLoaded = useCallback(async (levels: JLPTLevel[]) => {
+    const missing = levels.filter((level) => !loadedVocabByLevel[level]);
+    if (missing.length === 0) return;
+    const entries = await Promise.all(
+      missing.map(async (level) => [level, await vocabLevelLoaders[level]()] as const),
+    );
+    setLoadedVocabByLevel((prev) => {
+      const next = { ...prev };
+      for (const [level, data] of entries) next[level] = data;
+      return next;
+    });
+  }, [loadedVocabByLevel]);
+
+  useEffect(() => {
+    const neededLevels =
+      studyMode === "career"
+        ? [careerState.activeLevel]
+        : isCumulativeMode
+          ? LEVELS.slice(0, LEVELS.indexOf(targetLevel) + 1)
+          : [targetLevel];
+    void ensureVocabLevelsLoaded(neededLevels);
+  }, [careerState.activeLevel, ensureVocabLevelsLoaded, isCumulativeMode, studyMode, targetLevel]);
+
   const freeDataset = useMemo(
-    () => (isCumulativeMode ? getCumulativeDataset(targetLevel) : vocabByLevel[targetLevel]),
-    [isCumulativeMode, targetLevel],
+    () =>
+      isCumulativeMode
+        ? getCumulativeDataset(targetLevel, loadedVocabByLevel)
+        : (loadedVocabByLevel[targetLevel] ?? []),
+    [isCumulativeMode, loadedVocabByLevel, targetLevel],
   );
   const careerLevelDataset = useMemo(
-    () => vocabByLevel[careerState.activeLevel],
-    [careerState.activeLevel],
+    () => loadedVocabByLevel[careerState.activeLevel] ?? [],
+    [careerState.activeLevel, loadedVocabByLevel],
   );
   const careerStages = useMemo(
     () => chunkDataset(careerLevelDataset, CAREER_STAGE_SIZE),

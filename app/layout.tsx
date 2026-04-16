@@ -1,9 +1,7 @@
 import type { Metadata, Viewport } from "next";
-import { cookies } from "next/headers";
 import { Geist, Geist_Mono } from "next/font/google";
 import BottomNav from "@/components/layout/BottomNav";
 import Navbar from "@/components/layout/Navbar";
-import { resolveLocale } from "@/lib/i18n.shared";
 import "./globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
@@ -83,24 +81,34 @@ export const viewport: Viewport = {
   ],
 };
 
-export default async function RootLayout({
+const clientPrefsBootstrap = `
+(() => {
+  try {
+    const theme = window.localStorage.getItem("tomakun.theme");
+    const locale = window.localStorage.getItem("tomakun.locale");
+    if (theme === "light" || theme === "dark") {
+      document.documentElement.dataset.theme = theme;
+    }
+    if (locale === "en" || locale === "fr") {
+      document.documentElement.lang = locale;
+    }
+  } catch {}
+})();
+`;
+
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const cookieStore = await cookies();
-  const themeCookie = cookieStore.get("tomakun.theme")?.value;
-  const localeCookie = cookieStore.get("tomakun.locale")?.value;
-  const initialTheme = themeCookie === "light" || themeCookie === "dark" ? themeCookie : undefined;
-  const initialLocale = resolveLocale(localeCookie);
-
   return (
     <html
-      lang={initialLocale}
+      lang="en"
+      suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-      data-theme={initialTheme}
     >
       <body className="app-shell min-h-full flex flex-col">
+        <script dangerouslySetInnerHTML={{ __html: clientPrefsBootstrap }} />
         <Navbar />
         <SpeedInsights />
         <Analytics />

@@ -5,11 +5,6 @@ import { CircleHelp, X } from "lucide-react";
 import type { JLPTLevel } from "@/types/vocab";
 import type { GrammarPoint } from "@/types/grammar";
 import AnswerFeedback from "@/components/feedback/AnswerFeedback";
-import grammarN1Json from "@/data/processed/grammar_n1.json";
-import grammarN2Json from "@/data/processed/grammar_n2.json";
-import grammarN3Json from "@/data/processed/grammar_n3.json";
-import grammarN4Json from "@/data/processed/grammar_n4.json";
-import grammarN5Json from "@/data/processed/grammar_n5.json";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { clearTrainingStatus, saveTrainingStatus } from "@/lib/training-status.storage";
@@ -35,11 +30,19 @@ const LEVELS: JLPTLevel[] = ["N5", "N4", "N3", "N2", "N1"];
 const SET_SIZES = [5, 10, 20, 30] as const;
 
 const grammarByLevel: Record<JLPTLevel, GrammarPoint[]> = {
-  N5: grammarN5Json as GrammarPoint[],
-  N4: grammarN4Json as GrammarPoint[],
-  N3: grammarN3Json as GrammarPoint[],
-  N2: grammarN2Json as GrammarPoint[],
-  N1: grammarN1Json as GrammarPoint[],
+  N5: [],
+  N4: [],
+  N3: [],
+  N2: [],
+  N1: [],
+};
+
+const grammarLevelLoaders: Record<JLPTLevel, () => Promise<GrammarPoint[]>> = {
+  N5: () => import("@/data/processed/grammar_n5.json").then((mod) => mod.default as GrammarPoint[]),
+  N4: () => import("@/data/processed/grammar_n4.json").then((mod) => mod.default as GrammarPoint[]),
+  N3: () => import("@/data/processed/grammar_n3.json").then((mod) => mod.default as GrammarPoint[]),
+  N2: () => import("@/data/processed/grammar_n2.json").then((mod) => mod.default as GrammarPoint[]),
+  N1: () => import("@/data/processed/grammar_n1.json").then((mod) => mod.default as GrammarPoint[]),
 };
 
 const INITIAL_PROGRESS: GrammarSessionProgress = {
@@ -100,6 +103,8 @@ export default function GrammarTrainer() {
   const { locale } = useI18n();
   const tr = (frText: string, enText: string) => (locale === "fr" ? frText : enText);
   const [targetLevel, setTargetLevel] = useState<JLPTLevel>("N5");
+  const [loadedGrammarByLevel, setLoadedGrammarByLevel] =
+    useState<Partial<Record<JLPTLevel, GrammarPoint[]>>>(grammarByLevel);
   const [isCumulative, setIsCumulative] = useState(true);
   const [setSize, setSetSize] = useState<number>(10);
   const [session, setSession] = useState<GrammarPoint[]>([]);
@@ -129,9 +134,38 @@ export default function GrammarTrainer() {
     () => null,
   );
 
+  const ensureGrammarLevelsLoaded = useCallback(async (levels: JLPTLevel[]) => {
+    const missing = levels.filter((level) => !loadedGrammarByLevel[level]);
+    if (missing.length === 0) return;
+    const entries = await Promise.all(
+      missing.map(async (level) => [level, await grammarLevelLoaders[level]()] as const),
+    );
+    setLoadedGrammarByLevel((prev) => {
+      const next = { ...prev };
+      for (const [level, data] of entries) next[level] = data;
+      return next;
+    });
+  }, [loadedGrammarByLevel]);
+
+  useEffect(() => {
+    const neededLevels = isCumulative ? LEVELS.slice(0, LEVELS.indexOf(targetLevel) + 1) : [targetLevel];
+    void ensureGrammarLevelsLoaded(neededLevels);
+  }, [ensureGrammarLevelsLoaded, isCumulative, targetLevel]);
+
   const pool = useMemo(
-    () => getGrammarPool(grammarByLevel, targetLevel, isCumulative),
-    [isCumulative, targetLevel],
+    () =>
+      getGrammarPool(
+        {
+          N5: loadedGrammarByLevel.N5 ?? [],
+          N4: loadedGrammarByLevel.N4 ?? [],
+          N3: loadedGrammarByLevel.N3 ?? [],
+          N2: loadedGrammarByLevel.N2 ?? [],
+          N1: loadedGrammarByLevel.N1 ?? [],
+        },
+        targetLevel,
+        isCumulative,
+      ),
+    [isCumulative, loadedGrammarByLevel, targetLevel],
   );
 
   const current = session[progress.index] ?? null;
