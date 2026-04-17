@@ -6,10 +6,10 @@ import { useI18n } from "@/lib/i18n";
 const SERIES = ["short", "medium", "long"] as const;
 type SeriesKey = (typeof SERIES)[number];
 
-function seriesLabel(series: SeriesKey): string {
+function seriesLabel(series: SeriesKey): string | null {
   if (series === "short") return "10";
   if (series === "medium") return "30";
-  return "Full";
+  return null;
 }
 
 export default function KanaTrainerPage() {
@@ -18,7 +18,7 @@ export default function KanaTrainerPage() {
   return (
     <section className="flex flex-1 flex-col justify-center">
       <div className="surface-card rounded-xl p-5 shadow-sm">
-        <p className="text-sm font-semibold">Kana Trainer</p>
+        <p className="text-sm font-semibold">{t("home.kanaTitle")}</p>
         <p className="text-muted mt-1 text-xs">
           {t("kanaTrainer.description")}
         </p>
@@ -33,7 +33,7 @@ export default function KanaTrainerPage() {
                   href={`/kana?series=${series}`}
                   className="btn-option flex h-10 items-center justify-center rounded-lg text-sm font-medium"
                 >
-                  {seriesLabel(series)}
+                  {seriesLabel(series) ?? t("common.full")}
                 </Link>
               ))}
             </div>
@@ -48,7 +48,7 @@ export default function KanaTrainerPage() {
                   href={`/hiragana?series=${series}`}
                   className="btn-option flex h-10 items-center justify-center rounded-lg text-sm font-medium"
                 >
-                  {seriesLabel(series)}
+                  {seriesLabel(series) ?? t("common.full")}
                 </Link>
               ))}
             </div>

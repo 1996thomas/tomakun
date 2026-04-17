@@ -169,14 +169,14 @@ export default function BottomNav() {
 
   const moduleLabel =
     pageModule === "kana"
-      ? "Katakana"
+      ? t("module.katakana")
       : pageModule === "hiragana"
-        ? "Hiragana"
+        ? t("module.hiragana")
         : pageModule === "vocab"
-          ? "Vocab"
+          ? t("module.vocab")
           : pageModule === "grammar"
-            ? "Grammar"
-            : "Module";
+            ? t("module.grammar")
+            : t("module.default");
 
   return (
     <aside className="surface-card fixed right-0 bottom-0 left-0 z-20 border-x-0 border-b-0">
@@ -185,7 +185,7 @@ export default function BottomNav() {
           <>
             <div className="flex items-center justify-between">
               <p className="text-xs font-semibold">
-                Kana - {t("bottom.settings")}
+                {t("module.kana")} - {t("bottom.settings")}
               </p>
               <p className="text-muted text-[11px]">
                 {t("bottom.savedCount", { count: (savedKana ? 1 : 0) + (savedHiragana ? 1 : 0) })}
@@ -193,7 +193,7 @@ export default function BottomNav() {
             </div>
             <div className="mt-2 grid grid-cols-2 gap-2">
               <div className="surface-card rounded-md p-2">
-                <p className="text-[10px] font-semibold">Katakana</p>
+                <p className="text-[10px] font-semibold">{t("module.katakana")}</p>
                 <p className="text-muted mt-0.5 text-[10px]">
                   {savedKana ? `${savedKana.answeredCount}/${savedKana.sessionGoal}` : t("bottom.noSaved")}
                 </p>
@@ -221,7 +221,7 @@ export default function BottomNav() {
               </div>
 
               <div className="surface-card rounded-md p-2">
-                <p className="text-[10px] font-semibold">Hiragana</p>
+                <p className="text-[10px] font-semibold">{t("module.hiragana")}</p>
                 <p className="text-muted mt-0.5 text-[10px]">
                   {savedHiragana ? `${savedHiragana.answeredCount}/${savedHiragana.sessionGoal}` : t("bottom.noSaved")}
                 </p>

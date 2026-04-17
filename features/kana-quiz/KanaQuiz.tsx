@@ -37,6 +37,7 @@ export default function KanaQuiz() {
   const searchParams = useSearchParams();
   const series = useMemo(() => parseSeries(searchParams.get("series")), [searchParams]);
   const shouldResume = useMemo(() => searchParams.get("resume") === "saved", [searchParams]);
+  const existingSavedSession = useMemo(() => loadSavedKanaSession(), []);
   const resumeSession = useMemo(
     () => (shouldResume ? loadSavedKanaSession() : null),
     [shouldResume],
@@ -50,6 +51,9 @@ export default function KanaQuiz() {
   const [wrongCount, setWrongCount] = useState(() => resumeSession?.wrongCount ?? 0);
   const [sessionEnded, setSessionEnded] = useState(false);
   const [isStopped, setIsStopped] = useState(false);
+  const [showSavedChoiceModal, setShowSavedChoiceModal] = useState(
+    !shouldResume && Boolean(existingSavedSession),
+  );
   const [showStopModal, setShowStopModal] = useState(false);
   const [pendingNavigationHref, setPendingNavigationHref] = useState<string | null>(null);
   const endAfterThisFeedbackRef = useRef(false);
@@ -151,7 +155,7 @@ export default function KanaQuiz() {
   useEffect(() => {
     saveTrainingStatus({
       module: "kana",
-      label: `Katakana ${series === "short" ? "10" : series === "medium" ? "30" : "Full"}`,
+      label: `katakana.${series === "short" ? "10" : series === "medium" ? "30" : "full"}`,
       current: Math.min(answeredCount, sessionGoal),
       goal: sessionGoal,
       correct: correctCount,
@@ -329,7 +333,7 @@ export default function KanaQuiz() {
         <AnswerFeedback
           className="mt-4"
           tone={isCorrect === null ? null : isCorrect ? "success" : "error"}
-          errorLabel={`Incorrect - ${question.correctAnswer}`}
+          errorLabel={`${t("feedback.incorrect")} - ${question.correctAnswer}`}
         />
 
       </div>
@@ -358,6 +362,42 @@ export default function KanaQuiz() {
                 className="h-10 rounded-lg text-sm font-medium"
               >
                 {t("quiz.continueSeries")}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+      {showSavedChoiceModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 p-4" role="dialog" aria-modal="true">
+          <div className="surface-card w-full max-w-md rounded-xl p-4 shadow-lg">
+            <p className="text-sm font-semibold">
+              {t("quiz.savedDetectedTitle")}
+            </p>
+            <p className="text-muted mt-1 text-xs">
+              {t("quiz.savedDetectedDesc")}
+            </p>
+            <div className="mt-3 grid grid-cols-1 gap-2">
+              <Button
+                type="button"
+                onClick={() => {
+                  setShowSavedChoiceModal(false);
+                  restoreSavedSession();
+                }}
+                className="h-10 rounded-lg text-sm font-medium"
+              >
+                {t("quiz.savedResume")}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  clearKanaSession();
+                  setShowSavedChoiceModal(false);
+                  resetSession();
+                }}
+                className="h-10 rounded-lg text-sm font-medium"
+              >
+                {t("quiz.savedRestart")}
               </Button>
             </div>
           </div>

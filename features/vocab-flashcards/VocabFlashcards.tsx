@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import type { LucideIcon } from "lucide-react";
 import { RotateCcw, CircleDashed, Check, Zap, CircleHelp, X } from "lucide-react";
 import AnswerFeedback from "@/components/feedback/AnswerFeedback";
@@ -55,21 +55,18 @@ const vocabLevelLoaders: Record<JLPTLevel, () => Promise<Vocab[]>> = {
 const RATING_BUTTONS: Array<{
   rating: ReviewRating;
   Icon: LucideIcon;
-  title: string;
   className: string;
 }> = [
   {
     rating: "again",
     Icon: RotateCcw,
-    title: "Again",
     className: "btn-option border-[var(--danger)] text-[var(--danger)]",
   },
-  { rating: "hard", Icon: CircleDashed, title: "Hard", className: "btn-option" },
-  { rating: "good", Icon: Check, title: "Good", className: "btn-primary" },
+  { rating: "hard", Icon: CircleDashed, className: "btn-option" },
+  { rating: "good", Icon: Check, className: "btn-primary" },
   {
     rating: "easy",
     Icon: Zap,
-    title: "Easy",
     className: "btn-option border-[var(--success)] text-[var(--success)]",
   },
 ];
@@ -297,11 +294,12 @@ function getSavedVocabSnapshot() {
 }
 
 export default function VocabFlashcards() {
-  const { locale } = useI18n();
-  const tr = (frText: string, enText: string) => (locale === "fr" ? frText : enText);
+  const { t } = useI18n();
   const [studyMode, setStudyMode] = useState<StudyMode>("career");
   const [loadedVocabByLevel, setLoadedVocabByLevel] =
     useState<Partial<Record<JLPTLevel, Vocab[]>>>({});
+  const [isLoadingLevels, setIsLoadingLevels] = useState(false);
+  const [loadError, setLoadError] = useState(false);
   const [targetLevel, setTargetLevel] = useState<JLPTLevel>("N5");
   const [isCumulativeMode, setIsCumulativeMode] = useState(true);
   const [setSize, setSetSize] = useState<number>(20);
@@ -356,7 +354,10 @@ export default function VocabFlashcards() {
   const [sessionWrong, setSessionWrong] = useState(0);
   const [answerFeedback, setAnswerFeedback] = useState<"success" | "error" | null>(null);
   const [showStopModal, setShowStopModal] = useState(false);
+  const [showOverwriteModal, setShowOverwriteModal] = useState(false);
   const [pendingNavigationHref, setPendingNavigationHref] = useState<string | null>(null);
+  const loadedRef = useRef<Partial<Record<JLPTLevel, Vocab[]>>>({});
+  const inFlightRef = useRef<Partial<Record<JLPTLevel, Promise<Vocab[]>>>>({});
   const savedSession = useSyncExternalStore(
     (onStoreChange) => {
       if (typeof window === "undefined") return () => {};
@@ -375,18 +376,51 @@ export default function VocabFlashcards() {
     () => null,
   );
 
-  const ensureVocabLevelsLoaded = useCallback(async (levels: JLPTLevel[]) => {
-    const missing = levels.filter((level) => loadedVocabByLevel[level] === undefined);
-    if (missing.length === 0) return;
-    const entries = await Promise.all(
-      missing.map(async (level) => [level, await vocabLevelLoaders[level]()] as const),
-    );
-    setLoadedVocabByLevel((prev) => {
-      const next = { ...prev };
-      for (const [level, data] of entries) next[level] = data;
-      return next;
-    });
+  useEffect(() => {
+    loadedRef.current = loadedVocabByLevel;
   }, [loadedVocabByLevel]);
+
+  const ensureVocabLevelsLoaded = useCallback(async (levels: JLPTLevel[]) => {
+    const jobs: Array<[JLPTLevel, Promise<Vocab[]>]> = [];
+    for (const level of levels) {
+      if (loadedRef.current[level] !== undefined) continue;
+      const existingJob = inFlightRef.current[level];
+      if (existingJob) {
+        jobs.push([level, existingJob]);
+        continue;
+      }
+      const createdJob = vocabLevelLoaders[level]();
+      inFlightRef.current[level] = createdJob;
+      jobs.push([level, createdJob]);
+    }
+    if (jobs.length === 0) return;
+
+    setIsLoadingLevels(true);
+    setLoadError(false);
+
+    const results = await Promise.allSettled(jobs.map(([, job]) => job));
+    const entries: Array<readonly [JLPTLevel, Vocab[]]> = [];
+    let hasError = false;
+    for (let i = 0; i < results.length; i += 1) {
+      const level = jobs[i][0];
+      const result = results[i];
+      delete inFlightRef.current[level];
+      if (result.status === "fulfilled") {
+        entries.push([level, result.value] as const);
+      } else {
+        hasError = true;
+      }
+    }
+    if (entries.length > 0) {
+      setLoadedVocabByLevel((prev) => {
+        const next = { ...prev };
+        for (const [level, data] of entries) next[level] = data;
+        return next;
+      });
+    }
+    setLoadError(hasError);
+    setIsLoadingLevels(false);
+  }, []);
 
   useEffect(() => {
     const neededLevels =
@@ -395,7 +429,9 @@ export default function VocabFlashcards() {
         : isCumulativeMode
           ? LEVELS.slice(0, LEVELS.indexOf(targetLevel) + 1)
           : [targetLevel];
-    void ensureVocabLevelsLoaded(neededLevels);
+    queueMicrotask(() => {
+      void ensureVocabLevelsLoaded(neededLevels);
+    });
   }, [careerState.activeLevel, ensureVocabLevelsLoaded, isCumulativeMode, studyMode, targetLevel]);
 
   const freeDataset = useMemo(
@@ -434,6 +470,19 @@ export default function VocabFlashcards() {
   );
   const careerMasteryRate =
     activeCareerStage.length > 0 ? Math.round((careerMastered / activeCareerStage.length) * 100) : 0;
+  const totalCareerStages = careerStages.length;
+  const completedCareerStages = Math.min(careerState.activeStageIndex, totalCareerStages);
+  const careerProgressPercent =
+    totalCareerStages > 0 ? Math.round((completedCareerStages / totalCareerStages) * 100) : 0;
+  const careerStageLabels = useMemo(
+    () =>
+      careerStages.map((_, idx) => ({
+        index: idx,
+        shortLabel: `${careerState.activeLevel.replace("N", "")}.${idx + 1}`,
+        fullLabel: `${careerState.activeLevel}.${idx + 1}`,
+      })),
+    [careerStages, careerState.activeLevel],
+  );
 
   function startSession(): void {
     clearVocabSession();
@@ -445,6 +494,14 @@ export default function VocabFlashcards() {
     setSessionCorrect(0);
     setSessionWrong(0);
     setAnswerFeedback(null);
+  }
+
+  function confirmStartSession(): void {
+    if (savedSession) {
+      setShowOverwriteModal(true);
+      return;
+    }
+    startSession();
   }
 
   function stopSession(): void {
@@ -554,7 +611,7 @@ export default function VocabFlashcards() {
     const accuracy = totalAnswered > 0 ? Math.round((sessionCorrect / totalAnswered) * 100) : 0;
     saveTrainingStatus({
       module: "vocab",
-      label: studyMode === "career" ? "Vocab Carriere" : "Vocab Libre",
+      label: studyMode === "career" ? "vocab.career" : "vocab.free",
       current: Math.min(sessionIndex, sessionIds.length),
       goal: sessionIds.length,
       correct: sessionCorrect,
@@ -621,13 +678,13 @@ export default function VocabFlashcards() {
     <section className="flex flex-1 flex-col justify-center">
       <div className="surface-card rounded-xl p-4 shadow-sm">
         <div className="flex items-center justify-between gap-2">
-          <p className="text-sm font-semibold leading-none">Exercice vocabulaire JLPT</p>
+          <p className="text-sm font-semibold leading-none">{t("vocab.header.title")}</p>
           <div className="flex items-center gap-1">
             <button
               type="button"
               onClick={() => setShowHelper(true)}
               className="btn-option inline-flex h-8 w-8 items-center justify-center rounded-lg"
-              aria-label="Afficher les explications des flashcards"
+              aria-label={t("vocab.header.showHelpAria")}
             >
               <CircleHelp className="h-4 w-4" aria-hidden="true" />
             </button>
@@ -636,7 +693,7 @@ export default function VocabFlashcards() {
                 type="button"
                 onClick={() => setShowStopModal(true)}
                 className="btn-option inline-flex h-8 w-8 items-center justify-center rounded-lg"
-                aria-label="Fermer le set"
+                aria-label={t("vocab.session.closeSetAria")}
               >
                 <X className="h-4 w-4" aria-hidden="true" />
               </button>
@@ -644,13 +701,23 @@ export default function VocabFlashcards() {
           </div>
         </div>
         <p className="text-muted mt-1 text-xs">
-          {tr("Choisis jusqu'a quel niveau reviser, puis lance un set.", "Choose your target level, then start a set.")}
+          {t("vocab.header.subtitle")}
         </p>
+        {isLoadingLevels && (
+          <p className="text-muted mt-1 text-xs">
+            {t("vocab.loading.cards")}
+          </p>
+        )}
+        {loadError && (
+          <p className="mt-1 text-xs text-[var(--danger)]">
+            {t("common.error.loadData")}
+          </p>
+        )}
 
         {!inSession && (
           <>
             <div className="mt-3">
-              <p className="text-muted mb-1 text-xs font-medium">{tr("Mode", "Mode")}</p>
+              <p className="text-muted mb-1 text-xs font-medium">{t("common.mode")}</p>
               <div className="grid grid-cols-2 gap-2">
                 <button
                   type="button"
@@ -660,7 +727,7 @@ export default function VocabFlashcards() {
                     studyMode === "career" ? "btn-primary" : "btn-option",
                   ].join(" ")}
                 >
-                  {tr("Carriere", "Career")}
+                  {t("vocab.mode.career")}
                 </button>
                 <button
                   type="button"
@@ -670,7 +737,7 @@ export default function VocabFlashcards() {
                     studyMode === "free" ? "btn-primary" : "btn-option",
                   ].join(" ")}
                 >
-                  {tr("Libre", "Free")}
+                  {t("vocab.mode.free")}
                 </button>
               </div>
             </div>
@@ -678,17 +745,86 @@ export default function VocabFlashcards() {
             {studyMode === "career" ? (
               <div className="surface-card mt-3 rounded-lg p-3">
                 <p className="text-xs font-semibold">
-                  {tr("Etape active", "Active stage")}: {careerState.activeLevel}.{careerState.activeStageIndex + 1}
+                  {t("vocab.career.activeStage")}: {careerState.activeLevel}.{careerState.activeStageIndex + 1}
                 </p>
                 <p className="text-muted mt-1 text-xs">
-                  {careerSeen}/{activeCareerStage.length} {tr("vus", "seen")} · {careerMastered}/
-                  {activeCareerStage.length} {tr("maitrises", "mastered")} ({careerMasteryRate}%)
+                  {careerSeen}/{activeCareerStage.length} {t("common.seen")} · {careerMastered}/
+                  {activeCareerStage.length} {t("common.mastered")} ({careerMasteryRate}%)
                 </p>
+                {careerStageLabels.length > 0 && (
+                  <div className="mt-3">
+                    <div className="mb-2 flex items-center justify-between text-[11px]">
+                      <p className="text-muted">
+                        {t("vocab.career.stageProgress")} ({careerState.activeLevel})
+                      </p>
+                      <p className="font-semibold text-[var(--foreground)]">
+                        {completedCareerStages}/{totalCareerStages} · {careerProgressPercent}%
+                      </p>
+                    </div>
+                    <div className="mt-1 h-2 w-full overflow-hidden rounded-full bg-[var(--surface-2)]">
+                      <div
+                        className="h-full rounded-full bg-[linear-gradient(90deg,var(--primary),var(--success))] transition-all duration-300"
+                        style={{ width: `${careerProgressPercent}%` }}
+                      />
+                    </div>
+                    <div className="mt-5 border-t border-[var(--border)]/60 pt-4">
+                      <p className="text-muted mb-2 px-1 text-[10px] uppercase tracking-wide">
+                        {t("vocab.career.stages")}
+                      </p>
+                    <div className="-mx-1 overflow-x-auto pb-1">
+                      <div className="flex min-w-max items-start gap-3 px-1">
+                        {careerStageLabels.map((stage) => {
+                          const isCompleted = stage.index < careerState.activeStageIndex;
+                          const isCurrent = stage.index === careerState.activeStageIndex;
+                          return (
+                            <div
+                              key={stage.fullLabel}
+                              className={[
+                                "relative flex w-[62px] flex-col items-center gap-1.5 rounded-lg border px-2 py-2",
+                                isCompleted
+                                  ? "border-[var(--success)] bg-[color-mix(in_srgb,var(--success)_10%,transparent)]"
+                                  : isCurrent
+                                    ? "border-[var(--primary)] bg-[color-mix(in_srgb,var(--primary)_10%,transparent)]"
+                                    : "border-[var(--border)] bg-[var(--surface)]",
+                              ].join(" ")}
+                              title={stage.fullLabel}
+                            >
+                              <span
+                                className={[
+                                  "h-4 w-4 rounded-full border-2",
+                                  isCompleted
+                                    ? "border-[var(--success)] bg-[var(--success)]"
+                                    : isCurrent
+                                      ? "border-[var(--primary)] bg-[var(--primary)]"
+                                      : "border-[var(--border)] bg-transparent",
+                                ].join(" ")}
+                                aria-hidden="true"
+                              />
+                              <span
+                                className={[
+                                  "text-[11px] font-semibold",
+                                  isCompleted
+                                    ? "text-[var(--success)]"
+                                    : isCurrent
+                                      ? "text-[var(--foreground)]"
+                                      : "text-[var(--muted)]",
+                                ].join(" ")}
+                              >
+                                {stage.shortLabel}
+                              </span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                    </div>
+                  </div>
+                )}
               </div>
             ) : (
               <>
             <div className="mt-3">
-              <p className="text-muted mb-1 text-xs font-medium">{tr("Mode de pool", "Pool mode")}</p>
+              <p className="text-muted mb-1 text-xs font-medium">{t("common.poolMode")}</p>
               <div className="grid grid-cols-2 gap-2">
                 <button
                   type="button"
@@ -698,7 +834,7 @@ export default function VocabFlashcards() {
                     isCumulativeMode ? "btn-primary" : "btn-option",
                   ].join(" ")}
                 >
-                  {tr("Cumulatif", "Cumulative")}
+                  {t("common.cumulative")}
                 </button>
                 <button
                   type="button"
@@ -708,20 +844,17 @@ export default function VocabFlashcards() {
                     !isCumulativeMode ? "btn-primary" : "btn-option",
                   ].join(" ")}
                 >
-                  {tr("Niveau precis", "Specific level")}
+                  {t("common.specificLevel")}
                 </button>
               </div>
               <p className="text-muted mt-1 text-[11px]">
-                {tr(
-                  "Cumulatif inclut tous les niveaux precedents. Niveau precis cible un seul niveau.",
-                  "Cumulative includes all previous levels. Specific level targets one level only.",
-                )}
+                {t("vocab.poolMode.help")}
               </p>
             </div>
 
             <div className="mt-3">
               <p className="text-muted mb-1 text-xs font-medium">
-                {isCumulativeMode ? tr("Niveau cumulatif cible", "Target cumulative level") : tr("Niveau cible", "Target level")}
+                {isCumulativeMode ? t("common.targetCumulativeLevel") : t("common.targetLevel")}
               </p>
               <div className="grid grid-cols-5 gap-2">
                 {LEVELS.map((level) => (
@@ -741,7 +874,7 @@ export default function VocabFlashcards() {
             </div>
 
             <div className="mt-3">
-              <p className="text-muted mb-1 text-xs font-medium">{tr("Taille du set", "Set size")}</p>
+              <p className="text-muted mb-1 text-xs font-medium">{t("common.setSize")}</p>
               <div className="grid grid-cols-4 gap-2">
                 {SET_SIZES.map((size) => (
                   <button
@@ -764,29 +897,29 @@ export default function VocabFlashcards() {
             <div className="mt-3 grid grid-cols-4 gap-2">
               <div className="surface-card rounded-lg p-2 text-center">
                 <p className="text-xs font-semibold">{stats.newCount}</p>
-                <p className="text-muted text-[11px]">{tr("Nouveaux", "New")}</p>
+                <p className="text-muted text-[11px]">{t("common.new")}</p>
               </div>
               <div className="surface-card rounded-lg p-2 text-center">
                 <p className="text-xs font-semibold">{stats.dueCount}</p>
-                <p className="text-muted text-[11px]">{tr("A revoir", "Due")}</p>
+                <p className="text-muted text-[11px]">{t("common.due")}</p>
               </div>
               <div className="surface-card rounded-lg p-2 text-center">
                 <p className="text-xs font-semibold">{stats.seenCount}</p>
-                <p className="text-muted text-[11px]">{tr("Vues", "Seen")}</p>
+                <p className="text-muted text-[11px]">{t("common.seen")}</p>
               </div>
               <div className="surface-card rounded-lg p-2 text-center">
                 <p className="text-xs font-semibold">{stats.masteredCount}</p>
-                <p className="text-muted text-[11px]">{tr("Maitrisees", "Mastered")}</p>
+                <p className="text-muted text-[11px]">{t("common.mastered")}</p>
               </div>
             </div>
 
             <button
               type="button"
-              onClick={startSession}
-              disabled={dataset.length === 0}
+              onClick={confirmStartSession}
+              disabled={dataset.length === 0 || isLoadingLevels}
               className="btn-primary mt-4 h-10 w-full rounded-lg text-sm font-medium disabled:cursor-not-allowed disabled:opacity-70"
             >
-              {tr("Lancer un set", "Start a set")} ({Math.min(studyMode === "career" ? activeCareerStage.length : setSize, dataset.length)} {tr("cartes", "cards")})
+              {t("common.startSet")} ({Math.min(studyMode === "career" ? activeCareerStage.length : setSize, dataset.length)} {t("common.cards")})
             </button>
           </>
         )}
@@ -796,11 +929,11 @@ export default function VocabFlashcards() {
             <div className="surface-card mt-4 rounded-xl p-5 text-center">
               <p className="text-muted text-xs">
                 {studyMode === "career"
-                  ? `${tr("Carriere", "Career")} ${careerState.activeLevel}.${careerState.activeStageIndex + 1}`
+                  ? `${t("vocab.mode.career")} ${careerState.activeLevel}.${careerState.activeStageIndex + 1}`
                   : isCumulativeMode
-                    ? `${tr("Jusqu'a", "Up to")} ${targetLevel}`
-                    : `${tr("Niveau", "Level")} ${targetLevel}`}{" "}
-                - {tr("Carte", "Card")}{" "}
+                    ? `${t("common.upTo")} ${targetLevel}`
+                    : `${t("common.level")} ${targetLevel}`}{" "}
+                - {t("common.card")}{" "}
                 {sessionIndex + 1}/{sessionIds.length}
               </p>
               <p className="mt-3 text-4xl font-bold">{current.word}</p>
@@ -808,7 +941,7 @@ export default function VocabFlashcards() {
               {showMeaning ? (
                 <p className="mt-3 text-base font-medium">{current.meaning}</p>
               ) : (
-                <p className="text-muted mt-3 text-sm">{tr("Essaie de rappeler le sens avant de reveler.", "Try to recall the meaning before revealing it.")}</p>
+                <p className="text-muted mt-3 text-sm">{t("vocab.session.recallHint")}</p>
               )}
             </div>
 
@@ -818,7 +951,7 @@ export default function VocabFlashcards() {
                 onClick={() => setShowMeaning(true)}
                 className="btn-primary mt-4 h-10 w-full rounded-lg text-sm font-medium"
               >
-                {tr("Voir la reponse", "Show answer")}
+                {t("common.showAnswer")}
               </button>
             )}
 
@@ -829,8 +962,8 @@ export default function VocabFlashcards() {
                     key={btn.rating}
                     type="button"
                     onClick={() => handleRate(btn.rating)}
-                    title={btn.title}
-                    aria-label={btn.title}
+                    title={t(`vocab.rating.${btn.rating}`)}
+                    aria-label={t(`vocab.rating.${btn.rating}`)}
                     className={`${btn.className} flex h-10 items-center justify-center rounded-lg`}
                   >
                     <btn.Icon className="h-4 w-4" aria-hidden="true" />
@@ -842,8 +975,8 @@ export default function VocabFlashcards() {
             <AnswerFeedback
               className="mt-2"
               tone={answerFeedback}
-              successLabel={tr("Bien note", "Well done")}
-              errorLabel={tr("A revoir", "Review")}
+              successLabel={t("feedback.wellDone")}
+              errorLabel={t("feedback.review")}
             />
 
           </>
@@ -851,9 +984,9 @@ export default function VocabFlashcards() {
 
         {isSessionDone && (
           <div className="surface-card mt-4 rounded-xl p-4 text-center">
-            <p className="text-sm font-semibold">{tr("Set termine", "Set complete")}</p>
+            <p className="text-sm font-semibold">{t("common.setComplete")}</p>
             <p className="text-muted mt-1 text-xs">
-              {tr("Bravo. Tu peux relancer un set ou changer les options.", "Great work. You can restart a set or change options.")}
+              {t("vocab.done.desc")}
             </p>
             {studyMode === "career" && careerMasteryRate >= 85 && careerSeen >= activeCareerStage.length && (
               <button
@@ -861,7 +994,7 @@ export default function VocabFlashcards() {
                 onClick={advanceCareerStage}
                 className="btn-primary mt-3 h-10 w-full rounded-lg text-sm font-medium"
               >
-                {tr("Valider et passer a l'etape suivante", "Validate and move to next stage")}
+                {t("vocab.done.nextStage")}
               </button>
             )}
             <button
@@ -869,7 +1002,7 @@ export default function VocabFlashcards() {
               onClick={stopSession}
               className="btn-option mt-3 h-10 w-full rounded-lg text-sm font-medium"
             >
-              {tr("Back to options", "Back to options")}
+              {t("common.backToOptions")}
             </button>
           </div>
         )}
@@ -878,48 +1011,42 @@ export default function VocabFlashcards() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 p-4" role="dialog" aria-modal="true">
           <div className="surface-card max-h-[85vh] w-full max-w-xl overflow-y-auto rounded-xl p-4 shadow-lg">
             <div className="flex items-center justify-between gap-3">
-              <p className="text-sm font-semibold">{tr("Comment fonctionnent les flashcards", "How flashcards work")}</p>
+              <p className="text-sm font-semibold">{t("vocab.help.title")}</p>
               <button
                 type="button"
                 onClick={() => setShowHelper(false)}
                 className="btn-option inline-flex h-8 w-8 items-center justify-center rounded-lg"
-                aria-label="Fermer la fenetre d'aide"
+                aria-label={t("common.closeHelpAria")}
               >
                 <X className="h-4 w-4" aria-hidden="true" />
               </button>
             </div>
 
             <p className="text-muted mt-2 text-xs">
-              {tr(
-                "Un set melange les cartes selon leur priorite: d'abord les cartes a revoir, puis les cartes faibles, puis de nouvelles cartes.",
-                "A set mixes cards by priority: due cards first, then weak cards, then new cards.",
-              )}
+              {t("vocab.help.priority")}
             </p>
             <p className="text-muted mt-2 text-xs">
-              {tr("En mode", "In")} <span className="font-medium">{tr("Carriere", "Career")}</span>,{" "}
-              {tr("tu avances etape par etape sur chaque niveau.", "you progress stage by stage on each level.")}{" "}
-              {tr("En mode", "In")} <span className="font-medium">{tr("Libre", "Free")}</span>,{" "}
-              {tr("tu choisis un niveau precis ou un pool cumulatif.", "you choose one level or a cumulative pool.")}
+              {t("common.inMode")} <span className="font-medium">{t("vocab.mode.career")}</span>,{" "}
+              {t("vocab.help.careerMode")} {t("common.inMode")} <span className="font-medium">{t("vocab.mode.free")}</span>,{" "}
+              {t("vocab.help.freeMode")}
             </p>
             <p className="text-muted mt-2 text-xs">
-              {tr("Stats", "Stats")}:
-              <span className="ml-1">{tr("Nouveaux = jamais vus", "New = never seen")}</span>,
-              <span className="ml-1">{tr("A revoir = deja vus et dus", "Due = already seen and due")}</span>,
-              <span className="ml-1">{tr("Vues = deja etudies", "Seen = already studied")}</span>,
-              <span className="ml-1">{tr("Maitrisees = bonne regularite + bonne precision", "Mastered = strong consistency + accuracy")}</span>.
+              {t("common.stats")}:
+              <span className="ml-1">{t("vocab.help.newDef")}</span>,
+              <span className="ml-1">{t("vocab.help.dueDef")}</span>,
+              <span className="ml-1">{t("vocab.help.seenDef")}</span>,
+              <span className="ml-1">{t("vocab.help.masteredDef")}</span>.
             </p>
 
-            <p className="mt-3 text-xs font-semibold">{tr("Signification des icones", "Icon meaning")}</p>
+            <p className="mt-3 text-xs font-semibold">{t("vocab.help.iconMeaning")}</p>
             <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2">
               {RATING_BUTTONS.map((btn) => (
                 <div key={`helper-${btn.rating}`} className="surface-card flex items-center gap-2 rounded-lg p-2">
                   <btn.Icon className="h-4 w-4" aria-hidden="true" />
                   <span className="text-muted text-xs">
-                    {btn.title}:
-                    {btn.rating === "again" && tr(" je me suis trompe -> reviens vite.", " I missed it -> review soon.")}
-                    {btn.rating === "hard" && tr(" correct mais difficile -> intervalle court.", " correct but hard -> short interval.")}
-                    {btn.rating === "good" && tr(" bonne reponse -> progression normale.", " correct -> normal progression.")}
-                    {btn.rating === "easy" && tr(" tres facile -> prochain rappel plus tard.", " very easy -> longer interval.")}
+                    {t(`vocab.rating.${btn.rating}`)}:
+                    {" "}
+                    {t(`vocab.help.rating.${btn.rating}`)}
                   </span>
                 </div>
               ))}
@@ -931,9 +1058,9 @@ export default function VocabFlashcards() {
       {showStopModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 p-4" role="dialog" aria-modal="true">
           <div className="surface-card w-full max-w-md rounded-xl p-4 shadow-lg">
-            <p className="text-sm font-semibold">{tr("Arreter ce set ?", "Stop this set?")}</p>
+            <p className="text-sm font-semibold">{t("common.stopSetTitle")}</p>
             <p className="text-muted mt-1 text-xs">
-              {tr("Tu peux sauvegarder pour reprendre plus tard, ou quitter sans sauvegarder.", "You can save to resume later, or quit without saving.")}
+              {t("common.stopSetDesc")}
             </p>
             <div className="mt-3 grid grid-cols-1 gap-2">
               <button
@@ -941,14 +1068,14 @@ export default function VocabFlashcards() {
                 onClick={saveAndStopSession}
                 className="btn-primary h-10 rounded-lg text-sm font-medium"
               >
-                {tr("Sauvegarder et quitter", "Save and quit")}
+                {t("common.saveAndQuit")}
               </button>
               <button
                 type="button"
                 onClick={stopWithoutSaving}
                 className="btn-option h-10 rounded-lg text-sm font-medium"
               >
-                {tr("Quitter sans sauvegarder", "Quit without saving")}
+                {t("common.quitWithoutSaving")}
               </button>
               <button
                 type="button"
@@ -958,7 +1085,48 @@ export default function VocabFlashcards() {
                 }}
                 className="btn-option h-10 rounded-lg text-sm font-medium"
               >
-                {tr("Continuer le set", "Continue set")}
+                {t("common.continueSet")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {showOverwriteModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 p-4" role="dialog" aria-modal="true">
+          <div className="surface-card w-full max-w-md rounded-xl p-4 shadow-lg">
+            <p className="text-sm font-semibold">
+              {t("common.savedExistsTitle")}
+            </p>
+            <p className="text-muted mt-1 text-xs">
+              {t("common.savedExistsDesc")}
+            </p>
+            <div className="mt-3 grid grid-cols-1 gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowOverwriteModal(false);
+                  restoreSavedSession();
+                }}
+                className="btn-option h-10 rounded-lg text-sm font-medium"
+              >
+                {t("common.resumeSaved")}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowOverwriteModal(false);
+                  startSession();
+                }}
+                className="btn-primary h-10 rounded-lg text-sm font-medium"
+              >
+                {t("common.restartSet")}
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowOverwriteModal(false)}
+                className="btn-option h-10 rounded-lg text-sm font-medium"
+              >
+                {t("common.cancel")}
               </button>
             </div>
           </div>

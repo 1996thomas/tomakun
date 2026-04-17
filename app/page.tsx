@@ -88,7 +88,7 @@ export default function Home() {
   return (
     <section className="flex flex-1 flex-col justify-center">
       <div className="surface-card mb-4 rounded-xl p-5 shadow-sm">
-        <p className="text-muted text-sm font-medium">TOMAKUN</p>
+        <p className="text-muted text-sm font-medium">{t("home.brand")}</p>
         <h1 className="mt-1 text-2xl font-bold">{t("home.title")}</h1>
         <p className="text-muted mt-2 text-sm">
           {t("home.subtitle")}
@@ -97,7 +97,7 @@ export default function Home() {
 
       <div className="surface-card mb-4 rounded-xl p-5 shadow-sm">
         <div className="flex items-center justify-between gap-2">
-          <p className="text-sm font-semibold">Kana Trainer</p>
+          <p className="text-sm font-semibold">{t("home.kanaTitle")}</p>
           {savedState.kana && <SavedBadge label={t("home.resume")} />}
         </div>
         <p className="text-muted mt-1 text-xs">

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { CircleHelp, X } from "lucide-react";
 import type { JLPTLevel } from "@/types/vocab";
 import type { GrammarPoint } from "@/types/grammar";
@@ -47,25 +47,25 @@ const INITIAL_PROGRESS: GrammarSessionProgress = {
 const QUESTION_UI: Record<
   GrammarQuestion["type"],
   {
-    badge: string;
+    badgeKey: string;
     badgeClass: string;
-    expected: string;
+    expectedKey: string;
   }
 > = {
   meaning_from_structure: {
-    badge: "Sens",
+    badgeKey: "grammar.type.meaning",
     badgeClass: "border-[var(--success)] text-[var(--success)] bg-[color-mix(in_srgb,var(--success)_10%,transparent)]",
-    expected: "Reponse attendue: choisis le bon sens.",
+    expectedKey: "grammar.expected.meaning",
   },
   structure_from_meaning: {
-    badge: "Structure",
+    badgeKey: "grammar.type.structure",
     badgeClass: "border-[var(--primary)] text-[var(--foreground)] bg-[var(--surface-2)]",
-    expected: "Reponse attendue: choisis la bonne structure.",
+    expectedKey: "grammar.expected.structure",
   },
   structure_from_example: {
-    badge: "Usage",
+    badgeKey: "grammar.type.usage",
     badgeClass: "border-[#3b82f6] text-[#3b82f6] bg-[color-mix(in_srgb,#3b82f6_12%,transparent)]",
-    expected: "Reponse attendue: identifie la structure utilisee.",
+    expectedKey: "grammar.expected.usage",
   },
 };
 
@@ -92,11 +92,12 @@ function getSavedSessionSnapshot() {
 }
 
 export default function GrammarTrainer() {
-  const { locale } = useI18n();
-  const tr = (frText: string, enText: string) => (locale === "fr" ? frText : enText);
+  const { t } = useI18n();
   const [targetLevel, setTargetLevel] = useState<JLPTLevel>("N5");
   const [loadedGrammarByLevel, setLoadedGrammarByLevel] =
     useState<Partial<Record<JLPTLevel, GrammarPoint[]>>>({});
+  const [isLoadingLevels, setIsLoadingLevels] = useState(false);
+  const [loadError, setLoadError] = useState(false);
   const [isCumulative, setIsCumulative] = useState(true);
   const [setSize, setSetSize] = useState<number>(10);
   const [session, setSession] = useState<GrammarPoint[]>([]);
@@ -106,7 +107,10 @@ export default function GrammarTrainer() {
   const [feedback, setFeedback] = useState<"correct" | "wrong" | null>(null);
   const [showHelper, setShowHelper] = useState(false);
   const [showStopModal, setShowStopModal] = useState(false);
+  const [showOverwriteModal, setShowOverwriteModal] = useState(false);
   const [pendingNavigationHref, setPendingNavigationHref] = useState<string | null>(null);
+  const loadedRef = useRef<Partial<Record<JLPTLevel, GrammarPoint[]>>>({});
+  const inFlightRef = useRef<Partial<Record<JLPTLevel, Promise<GrammarPoint[]>>>>({});
 
   const savedSession = useSyncExternalStore(
     (onStoreChange) => {
@@ -126,22 +130,57 @@ export default function GrammarTrainer() {
     () => null,
   );
 
-  const ensureGrammarLevelsLoaded = useCallback(async (levels: JLPTLevel[]) => {
-    const missing = levels.filter((level) => loadedGrammarByLevel[level] === undefined);
-    if (missing.length === 0) return;
-    const entries = await Promise.all(
-      missing.map(async (level) => [level, await grammarLevelLoaders[level]()] as const),
-    );
-    setLoadedGrammarByLevel((prev) => {
-      const next = { ...prev };
-      for (const [level, data] of entries) next[level] = data;
-      return next;
-    });
+  useEffect(() => {
+    loadedRef.current = loadedGrammarByLevel;
   }, [loadedGrammarByLevel]);
+
+  const ensureGrammarLevelsLoaded = useCallback(async (levels: JLPTLevel[]) => {
+    const jobs: Array<[JLPTLevel, Promise<GrammarPoint[]>]> = [];
+    for (const level of levels) {
+      if (loadedRef.current[level] !== undefined) continue;
+      const existingJob = inFlightRef.current[level];
+      if (existingJob) {
+        jobs.push([level, existingJob]);
+        continue;
+      }
+      const createdJob = grammarLevelLoaders[level]();
+      inFlightRef.current[level] = createdJob;
+      jobs.push([level, createdJob]);
+    }
+    if (jobs.length === 0) return;
+
+    setIsLoadingLevels(true);
+    setLoadError(false);
+
+    const results = await Promise.allSettled(jobs.map(([, job]) => job));
+    const entries: Array<readonly [JLPTLevel, GrammarPoint[]]> = [];
+    let hasError = false;
+    for (let i = 0; i < results.length; i += 1) {
+      const level = jobs[i][0];
+      const result = results[i];
+      delete inFlightRef.current[level];
+      if (result.status === "fulfilled") {
+        entries.push([level, result.value] as const);
+      } else {
+        hasError = true;
+      }
+    }
+    if (entries.length > 0) {
+      setLoadedGrammarByLevel((prev) => {
+        const next = { ...prev };
+        for (const [level, data] of entries) next[level] = data;
+        return next;
+      });
+    }
+    setLoadError(hasError);
+    setIsLoadingLevels(false);
+  }, []);
 
   useEffect(() => {
     const neededLevels = isCumulative ? LEVELS.slice(0, LEVELS.indexOf(targetLevel) + 1) : [targetLevel];
-    void ensureGrammarLevelsLoaded(neededLevels);
+    queueMicrotask(() => {
+      void ensureGrammarLevelsLoaded(neededLevels);
+    });
   }, [ensureGrammarLevelsLoaded, isCumulative, targetLevel]);
 
   const pool = useMemo(
@@ -178,6 +217,14 @@ export default function GrammarTrainer() {
     setSelected(null);
     setFeedback(null);
     setQuestion(first ? createQuestion(first, pool) : null);
+  }
+
+  function confirmStartTraining(): void {
+    if (savedSession) {
+      setShowOverwriteModal(true);
+      return;
+    }
+    startTraining();
   }
 
   function stopTraining(): void {
@@ -249,7 +296,7 @@ export default function GrammarTrainer() {
 
     saveTrainingStatus({
       module: "grammar",
-      label: "Grammar Trainer",
+      label: "grammar.trainer",
       current: Math.min(progress.index, progress.total),
       goal: progress.total,
       correct: progress.correct,
@@ -311,13 +358,13 @@ export default function GrammarTrainer() {
       <Card className="p-4">
         <CardContent>
         <div className="flex items-center justify-between gap-2">
-          <p className="text-sm font-semibold">Grammar Trainer JLPT</p>
+          <p className="text-sm font-semibold">{t("grammar.header.title")}</p>
           <div className="flex items-center gap-1">
             <button
               type="button"
               onClick={() => setShowHelper(true)}
               className="btn-option inline-flex h-8 w-8 items-center justify-center rounded-lg"
-              aria-label="Afficher les explications du grammar trainer"
+              aria-label={t("grammar.header.showHelpAria")}
             >
               <CircleHelp className="h-4 w-4" aria-hidden="true" />
             </button>
@@ -326,7 +373,7 @@ export default function GrammarTrainer() {
                 type="button"
                 onClick={() => setShowStopModal(true)}
                 className="btn-option inline-flex h-8 w-8 items-center justify-center rounded-lg"
-                aria-label="Fermer le set"
+                aria-label={t("grammar.session.closeSetAria")}
               >
                 <X className="h-4 w-4" aria-hidden="true" />
               </button>
@@ -334,16 +381,23 @@ export default function GrammarTrainer() {
           </div>
         </div>
         <p className="text-muted mt-1 text-xs">
-          {tr(
-            "Entraine-toi en boucle rapide: structure, sens, usage, feedback instantane.",
-            "Train in a fast loop: structure, meaning, usage, instant feedback.",
-          )}
+          {t("grammar.header.subtitle")}
         </p>
+        {isLoadingLevels && (
+          <p className="text-muted mt-1 text-xs">
+            {t("grammar.loading.exercises")}
+          </p>
+        )}
+        {loadError && (
+          <p className="mt-1 text-xs text-[var(--danger)]">
+            {t("common.error.loadData")}
+          </p>
+        )}
 
         {!inSession && !isDone && (
           <>
             <div className="mt-3">
-              <p className="text-muted mb-1 text-xs font-medium">{tr("Mode de pool", "Pool mode")}</p>
+              <p className="text-muted mb-1 text-xs font-medium">{t("common.poolMode")}</p>
               <div className="grid grid-cols-2 gap-2">
                 <Button
                   type="button"
@@ -351,7 +405,7 @@ export default function GrammarTrainer() {
                   variant={isCumulative ? "default" : "outline"}
                   className="h-9 rounded-lg text-xs font-medium transition"
                 >
-                  {tr("Cumulatif", "Cumulative")}
+                  {t("common.cumulative")}
                 </Button>
                 <Button
                   type="button"
@@ -359,14 +413,14 @@ export default function GrammarTrainer() {
                   variant={!isCumulative ? "default" : "outline"}
                   className="h-9 rounded-lg text-xs font-medium transition"
                 >
-                  {tr("Niveau precis", "Specific level")}
+                  {t("common.specificLevel")}
                 </Button>
               </div>
             </div>
 
             <div className="mt-3">
               <p className="text-muted mb-1 text-xs font-medium">
-                {isCumulative ? tr("Niveau cumulatif cible", "Target cumulative level") : tr("Niveau cible", "Target level")}
+                {isCumulative ? t("common.targetCumulativeLevel") : t("common.targetLevel")}
               </p>
               <div className="grid grid-cols-5 gap-2">
                 {LEVELS.map((level) => (
@@ -384,7 +438,7 @@ export default function GrammarTrainer() {
             </div>
 
             <div className="mt-3">
-              <p className="text-muted mb-1 text-xs font-medium">{tr("Taille du set", "Set size")}</p>
+              <p className="text-muted mb-1 text-xs font-medium">{t("common.setSize")}</p>
               <div className="grid grid-cols-4 gap-2">
                 {SET_SIZES.map((size) => (
                   <Button
@@ -403,29 +457,26 @@ export default function GrammarTrainer() {
             <div className="mt-3 grid grid-cols-2 gap-2">
               <div className="surface-card rounded-lg p-2 text-center">
                 <p className="text-xs font-semibold">{pool.length}</p>
-                <p className="text-muted text-[11px]">{tr("Points disponibles", "Available points")}</p>
+                <p className="text-muted text-[11px]">{t("grammar.stats.availablePoints")}</p>
               </div>
               <div className="surface-card rounded-lg p-2 text-center">
                 <p className="text-xs font-semibold">{Math.min(setSize, pool.length)}</p>
-                <p className="text-muted text-[11px]">{tr("Questions du set", "Questions in set")}</p>
+                <p className="text-muted text-[11px]">{t("grammar.stats.questionsInSet")}</p>
               </div>
             </div>
 
             <Button
               type="button"
-              onClick={startTraining}
-              disabled={pool.length === 0}
+              onClick={confirmStartTraining}
+              disabled={pool.length === 0 || isLoadingLevels}
               className="mt-4 flex h-10 w-full items-center justify-center rounded-lg text-sm font-medium disabled:cursor-not-allowed disabled:opacity-70"
             >
-              {tr("Lancer le training", "Start training")}
+              {t("grammar.action.startTraining")}
             </Button>
 
             {pool.length === 0 && (
               <p className="text-muted mt-2 text-xs">
-                {tr(
-                  "Donnees absentes pour ce niveau. Ajoute les fichiers grammar_n5 a grammar_n1 via le pipeline.",
-                  "No data for this level. Add grammar_n5 to grammar_n1 files via the pipeline.",
-                )}
+                {t("grammar.emptyData")}
               </p>
             )}
           </>
@@ -436,32 +487,32 @@ export default function GrammarTrainer() {
             <div className="surface-card mt-4 rounded-xl p-4">
               <div className="flex items-center justify-between gap-2">
                 <p className="text-muted text-xs">
-                  {tr("Level", "Level")} {current.level} - {tr("Question", "Question")} {progress.index + 1}/{progress.total}
+                  {t("common.level")} {current.level} - {t("grammar.question.label")} {progress.index + 1}/{progress.total}
                 </p>
                 <span
                   className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-semibold ${QUESTION_UI[question.type].badgeClass}`}
                 >
-                  {QUESTION_UI[question.type].badge}
+                  {t(QUESTION_UI[question.type].badgeKey)}
                 </span>
               </div>
 
               {question.type === "meaning_from_structure" && (
                 <>
-                  <p className="mt-2 text-xs font-semibold">{tr("Structure", "Structure")}</p>
+                  <p className="mt-2 text-xs font-semibold">{t("grammar.type.structure")}</p>
                   <p className="mt-1 text-2xl font-bold">{current.structure}</p>
                 </>
               )}
 
               {question.type === "structure_from_meaning" && (
                 <>
-                  <p className="mt-2 text-xs font-semibold">{tr("Sens", "Meaning")}</p>
+                  <p className="mt-2 text-xs font-semibold">{t("grammar.type.meaning")}</p>
                   <p className="text-muted mt-1 text-sm">{current.meaning}</p>
                 </>
               )}
 
               {question.type === "structure_from_example" && (
                 <>
-                  <p className="mt-2 text-xs font-semibold">{tr("Exemple", "Example")}</p>
+                  <p className="mt-2 text-xs font-semibold">{t("grammar.type.example")}</p>
                   <p className="mt-1 text-sm">{splitExampleRomaji(current.example).jp}</p>
                   {splitExampleRomaji(current.example).romaji && (
                     <p className="text-muted mt-1 text-xs">{splitExampleRomaji(current.example).romaji}</p>
@@ -473,7 +524,7 @@ export default function GrammarTrainer() {
 
             <div className="surface-card mt-3 rounded-lg p-3">
               <p className="text-xs font-semibold">{question.prompt}</p>
-              <p className="text-muted mt-1 text-[11px]">{QUESTION_UI[question.type].expected}</p>
+              <p className="text-muted mt-1 text-[11px]">{t(QUESTION_UI[question.type].expectedKey)}</p>
               <div className="mt-3 grid grid-cols-1 gap-2">
                 {question.choices.map((choice) => {
                   const isRight = question.answer === choice;
@@ -513,9 +564,9 @@ export default function GrammarTrainer() {
         {isDone && (
           <>
             <div className="surface-card mt-4 rounded-xl p-4 text-center">
-              <p className="text-sm font-semibold">{tr("Set termine", "Set complete")}</p>
+              <p className="text-sm font-semibold">{t("common.setComplete")}</p>
               <p className="text-muted mt-1 text-xs">
-                {progress.correct} {tr("correct", "correct")} - {progress.wrong} {tr("erreurs", "errors")}
+                {progress.correct} {t("common.correct")} - {progress.wrong} {t("common.errors")}
               </p>
             </div>
             <div className="mt-3 grid grid-cols-2 gap-2">
@@ -524,7 +575,7 @@ export default function GrammarTrainer() {
                 onClick={startTraining}
                 className="h-10 rounded-lg text-sm font-medium"
               >
-                {tr("Rejouer", "Play again")}
+                {t("common.playAgain")}
               </Button>
               <Button
                 type="button"
@@ -532,7 +583,7 @@ export default function GrammarTrainer() {
                 onClick={stopTraining}
                 className="h-10 rounded-lg text-sm font-medium"
               >
-                {tr("Configurer", "Configure")}
+                {t("common.configure")}
               </Button>
             </div>
           </>
@@ -544,47 +595,44 @@ export default function GrammarTrainer() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 p-4" role="dialog" aria-modal="true">
           <div className="surface-card max-h-[85vh] w-full max-w-xl overflow-y-auto rounded-xl p-4 shadow-lg">
             <div className="flex items-center justify-between gap-3">
-              <p className="text-sm font-semibold">{tr("Comment fonctionne le Grammar Trainer", "How Grammar Trainer works")}</p>
+              <p className="text-sm font-semibold">{t("grammar.help.title")}</p>
               <button
                 type="button"
                 onClick={() => setShowHelper(false)}
                 className="btn-option inline-flex h-8 w-8 items-center justify-center rounded-lg"
-                aria-label="Fermer la fenetre d'aide"
+                aria-label={t("common.closeHelpAria")}
               >
                 <X className="h-4 w-4" aria-hidden="true" />
               </button>
             </div>
 
             <p className="text-muted mt-2 text-xs">
-              {tr(
-                "Chaque set melange les points de grammaire du niveau choisi. Tu reponds rapidement, puis la carte suivante arrive automatiquement.",
-                "Each set mixes grammar points from the selected level. You answer quickly, then the next card appears automatically.",
-              )}
+              {t("grammar.help.overview")}
             </p>
             <p className="text-muted mt-2 text-xs">
-              {tr("Types de questions", "Question types")}:
+              {t("grammar.help.questionTypes")}:
             </p>
             <div className="mt-2 flex flex-wrap gap-1.5">
               <span
                 className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-semibold ${QUESTION_UI.meaning_from_structure.badgeClass}`}
               >
-                {QUESTION_UI.meaning_from_structure.badge}
+                {t(QUESTION_UI.meaning_from_structure.badgeKey)}
               </span>
               <span
                 className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-semibold ${QUESTION_UI.structure_from_meaning.badgeClass}`}
               >
-                {QUESTION_UI.structure_from_meaning.badge}
+                {t(QUESTION_UI.structure_from_meaning.badgeKey)}
               </span>
               <span
                 className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-semibold ${QUESTION_UI.structure_from_example.badgeClass}`}
               >
-                {QUESTION_UI.structure_from_example.badge}
+                {t(QUESTION_UI.structure_from_example.badgeKey)}
               </span>
             </div>
             <div className="text-muted mt-2 space-y-1 text-xs">
-              <p>{tr("Sens = retrouver la signification.", "Meaning = find the right meaning.")}</p>
-              <p>{tr("Structure = choisir la bonne forme grammaticale.", "Structure = choose the right grammar form.")}</p>
-              <p>{tr("Usage = reconnaitre la structure dans un exemple.", "Usage = identify the structure in an example.")}</p>
+              <p>{t("grammar.help.typeMeaning")}</p>
+              <p>{t("grammar.help.typeStructure")}</p>
+              <p>{t("grammar.help.typeUsage")}</p>
             </div>
           </div>
         </div>
@@ -593,12 +641,9 @@ export default function GrammarTrainer() {
       {showStopModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 p-4" role="dialog" aria-modal="true">
           <div className="surface-card w-full max-w-md rounded-xl p-4 shadow-lg">
-            <p className="text-sm font-semibold">{tr("Arreter ce set ?", "Stop this set?")}</p>
+            <p className="text-sm font-semibold">{t("common.stopSetTitle")}</p>
             <p className="text-muted mt-1 text-xs">
-              {tr(
-                "Tu peux sauvegarder pour reprendre plus tard, ou quitter sans garder la progression en cours.",
-                "You can save to resume later, or quit without keeping current progress.",
-              )}
+              {t("grammar.stop.desc")}
             </p>
             <div className="mt-3 grid grid-cols-1 gap-2">
               <Button
@@ -606,7 +651,7 @@ export default function GrammarTrainer() {
                 onClick={saveAndQuitSession}
                 className="h-10 rounded-lg text-sm font-medium"
               >
-                {tr("Sauvegarder et quitter", "Save and quit")}
+                {t("common.saveAndQuit")}
               </Button>
               <Button
                 type="button"
@@ -614,7 +659,7 @@ export default function GrammarTrainer() {
                 onClick={discardAndQuitSession}
                 className="h-10 rounded-lg text-sm font-medium"
               >
-                {tr("Quitter sans sauvegarder", "Quit without saving")}
+                {t("common.quitWithoutSaving")}
               </Button>
               <Button
                 type="button"
@@ -625,7 +670,50 @@ export default function GrammarTrainer() {
                 }}
                 className="h-10 rounded-lg text-sm font-medium"
               >
-                {tr("Continuer le set", "Continue set")}
+                {t("common.continueSet")}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+      {showOverwriteModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 p-4" role="dialog" aria-modal="true">
+          <div className="surface-card w-full max-w-md rounded-xl p-4 shadow-lg">
+            <p className="text-sm font-semibold">
+              {t("common.savedExistsTitle")}
+            </p>
+            <p className="text-muted mt-1 text-xs">
+              {t("common.savedExistsDesc")}
+            </p>
+            <div className="mt-3 grid grid-cols-1 gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setShowOverwriteModal(false);
+                  resumeSavedSession();
+                }}
+                className="h-10 rounded-lg text-sm font-medium"
+              >
+                {t("common.resumeSaved")}
+              </Button>
+              <Button
+                type="button"
+                onClick={() => {
+                  setShowOverwriteModal(false);
+                  startTraining();
+                }}
+                className="h-10 rounded-lg text-sm font-medium"
+              >
+                {t("common.restartSet")}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setShowOverwriteModal(false)}
+                className="h-10 rounded-lg text-sm font-medium"
+              >
+                {t("common.cancel")}
               </Button>
             </div>
           </div>
