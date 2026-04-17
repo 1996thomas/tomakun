@@ -21,6 +21,8 @@ import {
 } from "@/lib/vocab-session.storage";
 import { RESUME_SAVED_SET_EVENT } from "@/lib/saved-set.events";
 import { useI18n } from "@/lib/i18n";
+import { REWARD_TOAST_DURATION_MS, clearRewardToast } from "@/lib/reward-toast";
+import type { VocabAiQuota, VocabMemoryTipRequest, VocabMemoryTipResult } from "@/types/vocab-ai";
 
 const LEVELS: JLPTLevel[] = ["N5", "N4", "N3", "N2", "N1"];
 const SET_SIZES = [10, 20, 30, 50] as const;
@@ -63,7 +65,7 @@ const RATING_BUTTONS: Array<{
     className: "btn-option border-[var(--danger)] text-[var(--danger)]",
   },
   { rating: "hard", Icon: CircleDashed, className: "btn-option" },
-  { rating: "good", Icon: Check, className: "btn-primary" },
+  { rating: "good", Icon: Check, className: "btn-option border-[var(--primary)] text-[var(--primary)]" },
   {
     rating: "easy",
     Icon: Zap,
@@ -294,7 +296,7 @@ function getSavedVocabSnapshot() {
 }
 
 export default function VocabFlashcards() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const [studyMode, setStudyMode] = useState<StudyMode>("career");
   const [loadedVocabByLevel, setLoadedVocabByLevel] =
     useState<Partial<Record<JLPTLevel, Vocab[]>>>({});
@@ -353,9 +355,15 @@ export default function VocabFlashcards() {
   const [sessionCorrect, setSessionCorrect] = useState(0);
   const [sessionWrong, setSessionWrong] = useState(0);
   const [answerFeedback, setAnswerFeedback] = useState<"success" | "error" | null>(null);
+  const [isWaitingNextCard, setIsWaitingNextCard] = useState(false);
   const [showStopModal, setShowStopModal] = useState(false);
   const [showOverwriteModal, setShowOverwriteModal] = useState(false);
   const [pendingNavigationHref, setPendingNavigationHref] = useState<string | null>(null);
+  const [isLoadingMemoryTip, setIsLoadingMemoryTip] = useState(false);
+  const [memoryTipError, setMemoryTipError] = useState<string | null>(null);
+  const [memoryTip, setMemoryTip] = useState<VocabMemoryTipResult | null>(null);
+  const [memoryTipCardId, setMemoryTipCardId] = useState<string | null>(null);
+  const [vocabAiQuota, setVocabAiQuota] = useState<VocabAiQuota | null>(null);
   const loadedRef = useRef<Partial<Record<JLPTLevel, Vocab[]>>>({});
   const inFlightRef = useRef<Partial<Record<JLPTLevel, Promise<Vocab[]>>>>({});
   const savedSession = useSyncExternalStore(
@@ -494,6 +502,11 @@ export default function VocabFlashcards() {
     setSessionCorrect(0);
     setSessionWrong(0);
     setAnswerFeedback(null);
+    setIsWaitingNextCard(false);
+    setMemoryTip(null);
+    setMemoryTipError(null);
+    setMemoryTipCardId(null);
+    setIsLoadingMemoryTip(false);
   }
 
   function confirmStartSession(): void {
@@ -512,6 +525,11 @@ export default function VocabFlashcards() {
     setSessionWrong(0);
     setAnswerFeedback(null);
     setShowStopModal(false);
+    setIsWaitingNextCard(false);
+    setMemoryTip(null);
+    setMemoryTipError(null);
+    setMemoryTipCardId(null);
+    setIsLoadingMemoryTip(false);
   }
 
   const restoreSavedSession = useCallback((): void => {
@@ -526,6 +544,11 @@ export default function VocabFlashcards() {
     setSessionCorrect(savedSession.sessionCorrect);
     setSessionWrong(savedSession.sessionWrong);
     setAnswerFeedback(null);
+    setIsWaitingNextCard(false);
+    setMemoryTip(null);
+    setMemoryTipError(null);
+    setMemoryTipCardId(null);
+    setIsLoadingMemoryTip(false);
     clearVocabSession();
   }, [savedSession]);
 
@@ -581,7 +604,8 @@ export default function VocabFlashcards() {
   }
 
   function handleRate(rating: ReviewRating): void {
-    if (!current) return;
+    if (!current || isWaitingNextCard) return;
+    clearRewardToast();
 
     const base: VocabProgressItem = progress[current.id] ?? createInitialProgress(current.id, current.level);
     const updated = applyReview(base, rating);
@@ -602,8 +626,72 @@ export default function VocabFlashcards() {
       setAnswerFeedback("error");
     }
 
-    setSessionIndex((prev) => prev + 1);
-    setShowMeaning(false);
+    setIsWaitingNextCard(true);
+    window.setTimeout(() => {
+      setSessionIndex((prev) => prev + 1);
+      setShowMeaning(false);
+      setMemoryTip(null);
+      setMemoryTipError(null);
+      setMemoryTipCardId(null);
+      setIsLoadingMemoryTip(false);
+      setAnswerFeedback(null);
+      setIsWaitingNextCard(false);
+    }, REWARD_TOAST_DURATION_MS);
+  }
+
+  async function requestMemoryTip(): Promise<void> {
+    if (!current || !showMeaning || isLoadingMemoryTip || memoryTipCardId === current.id) return;
+    setIsLoadingMemoryTip(true);
+    setMemoryTipError(null);
+    try {
+      const payload: VocabMemoryTipRequest = { locale, card: current };
+      const response = await fetch("/api/ai/vocab-memory", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = (await response.json()) as {
+        tip?: VocabMemoryTipResult;
+        quota?: VocabAiQuota;
+        error?: string;
+      };
+      if (data.quota) setVocabAiQuota(data.quota);
+      if (!response.ok || !data.tip) throw new Error(data.error ?? t("vocab.ai.error"));
+      setMemoryTip(data.tip);
+      setMemoryTipCardId(current.id);
+    } catch (error) {
+      setMemoryTipError(error instanceof Error ? error.message : t("vocab.ai.error"));
+    } finally {
+      setIsLoadingMemoryTip(false);
+    }
+  }
+
+  useEffect(() => {
+    if (!inSession || !showMeaning) return;
+    let cancelled = false;
+    const fetchQuota = async () => {
+      try {
+        const response = await fetch("/api/ai/vocab-memory", { method: "GET", cache: "no-store" });
+        const data = (await response.json()) as { quota?: VocabAiQuota };
+        if (!cancelled && data.quota) setVocabAiQuota(data.quota);
+      } catch {
+        // no-op
+      }
+    };
+    void fetchQuota();
+    return () => {
+      cancelled = true;
+    };
+  }, [inSession, showMeaning, sessionIndex]);
+
+  function formatDuration(seconds: number): string {
+    const safe = Math.max(0, seconds);
+    const hours = Math.floor(safe / 3600);
+    const minutes = Math.floor((safe % 3600) / 60);
+    const secs = safe % 60;
+    if (hours > 0) return `${hours}h ${String(minutes).padStart(2, "0")}m`;
+    if (minutes > 0) return `${minutes}m ${String(secs).padStart(2, "0")}s`;
+    return `${secs}s`;
   }
 
   useEffect(() => {
@@ -665,18 +753,12 @@ export default function VocabFlashcards() {
   }, [inSession]);
 
   useEffect(() => {
-    if (!answerFeedback) return;
-    const timer = window.setTimeout(() => setAnswerFeedback(null), 450);
-    return () => window.clearTimeout(timer);
-  }, [answerFeedback]);
-
-  useEffect(() => {
     if (isSessionDone) clearVocabSession();
   }, [isSessionDone]);
 
   return (
     <section className="flex flex-1 flex-col justify-center">
-      <div className="surface-card rounded-xl p-4 shadow-sm">
+      <div className="surface-card rounded-xl p-3 shadow-sm sm:p-4">
         <div className="flex items-center justify-between gap-2">
           <p className="text-sm font-semibold leading-none">{t("vocab.header.title")}</p>
           <div className="flex items-center gap-1">
@@ -700,9 +782,11 @@ export default function VocabFlashcards() {
             )}
           </div>
         </div>
-        <p className="text-muted mt-1 text-xs">
-          {t("vocab.header.subtitle")}
-        </p>
+        {!inSession && (
+          <p className="text-muted mt-1 text-xs">
+            {t("vocab.header.subtitle")}
+          </p>
+        )}
         {isLoadingLevels && (
           <p className="text-muted mt-1 text-xs">
             {t("vocab.loading.cards")}
@@ -716,7 +800,7 @@ export default function VocabFlashcards() {
 
         {!inSession && (
           <>
-            <div className="mt-3">
+            <div className="mt-2.5">
               <p className="text-muted mb-1 text-xs font-medium">{t("common.mode")}</p>
               <div className="grid grid-cols-2 gap-2">
                 <button
@@ -743,7 +827,7 @@ export default function VocabFlashcards() {
             </div>
 
             {studyMode === "career" ? (
-              <div className="surface-card mt-3 rounded-lg p-3">
+              <div className="surface-card mt-2.5 rounded-lg p-2.5">
                 <p className="text-xs font-semibold">
                   {t("vocab.career.activeStage")}: {careerState.activeLevel}.{careerState.activeStageIndex + 1}
                 </p>
@@ -752,7 +836,7 @@ export default function VocabFlashcards() {
                   {activeCareerStage.length} {t("common.mastered")} ({careerMasteryRate}%)
                 </p>
                 {careerStageLabels.length > 0 && (
-                  <div className="mt-3">
+                  <div className="mt-2.5">
                     <div className="mb-2 flex items-center justify-between text-[11px]">
                       <p className="text-muted">
                         {t("vocab.career.stageProgress")} ({careerState.activeLevel})
@@ -767,12 +851,12 @@ export default function VocabFlashcards() {
                         style={{ width: `${careerProgressPercent}%` }}
                       />
                     </div>
-                    <div className="mt-5 border-t border-[var(--border)]/60 pt-4">
+                    <div className="mt-2 border-t border-[var(--border)]/60 pt-2">
                       <p className="text-muted mb-2 px-1 text-[10px] uppercase tracking-wide">
                         {t("vocab.career.stages")}
                       </p>
                     <div className="-mx-1 overflow-x-auto pb-1">
-                      <div className="flex min-w-max items-start gap-3 px-1">
+                      <div className="flex min-w-max items-start gap-2.5 px-1">
                         {careerStageLabels.map((stage) => {
                           const isCompleted = stage.index < careerState.activeStageIndex;
                           const isCurrent = stage.index === careerState.activeStageIndex;
@@ -823,7 +907,7 @@ export default function VocabFlashcards() {
               </div>
             ) : (
               <>
-            <div className="mt-3">
+            <div className="mt-2.5">
               <p className="text-muted mb-1 text-xs font-medium">{t("common.poolMode")}</p>
               <div className="grid grid-cols-2 gap-2">
                 <button
@@ -852,7 +936,7 @@ export default function VocabFlashcards() {
               </p>
             </div>
 
-            <div className="mt-3">
+            <div className="mt-2.5">
               <p className="text-muted mb-1 text-xs font-medium">
                 {isCumulativeMode ? t("common.targetCumulativeLevel") : t("common.targetLevel")}
               </p>
@@ -873,7 +957,7 @@ export default function VocabFlashcards() {
               </div>
             </div>
 
-            <div className="mt-3">
+            <div className="mt-2.5">
               <p className="text-muted mb-1 text-xs font-medium">{t("common.setSize")}</p>
               <div className="grid grid-cols-4 gap-2">
                 {SET_SIZES.map((size) => (
@@ -894,20 +978,20 @@ export default function VocabFlashcards() {
               </>
             )}
 
-            <div className="mt-3 grid grid-cols-4 gap-2">
-              <div className="surface-card rounded-lg p-2 text-center">
+            <div className="mt-2.5 grid grid-cols-4 gap-1.5">
+              <div className="surface-card rounded-lg p-1.5 text-center">
                 <p className="text-xs font-semibold">{stats.newCount}</p>
                 <p className="text-muted text-[11px]">{t("common.new")}</p>
               </div>
-              <div className="surface-card rounded-lg p-2 text-center">
+              <div className="surface-card rounded-lg p-1.5 text-center">
                 <p className="text-xs font-semibold">{stats.dueCount}</p>
                 <p className="text-muted text-[11px]">{t("common.due")}</p>
               </div>
-              <div className="surface-card rounded-lg p-2 text-center">
+              <div className="surface-card rounded-lg p-1.5 text-center">
                 <p className="text-xs font-semibold">{stats.seenCount}</p>
                 <p className="text-muted text-[11px]">{t("common.seen")}</p>
               </div>
-              <div className="surface-card rounded-lg p-2 text-center">
+              <div className="surface-card rounded-lg p-1.5 text-center">
                 <p className="text-xs font-semibold">{stats.masteredCount}</p>
                 <p className="text-muted text-[11px]">{t("common.mastered")}</p>
               </div>
@@ -917,7 +1001,7 @@ export default function VocabFlashcards() {
               type="button"
               onClick={confirmStartSession}
               disabled={dataset.length === 0 || isLoadingLevels}
-              className="btn-primary mt-4 h-10 w-full rounded-lg text-sm font-medium disabled:cursor-not-allowed disabled:opacity-70"
+              className="btn-primary mt-3 h-10 w-full rounded-lg text-sm font-medium disabled:cursor-not-allowed disabled:opacity-70"
             >
               {t("common.startSet")} ({Math.min(studyMode === "career" ? activeCareerStage.length : setSize, dataset.length)} {t("common.cards")})
             </button>
@@ -925,8 +1009,8 @@ export default function VocabFlashcards() {
         )}
 
         {inSession && current && (
-          <>
-            <div className="surface-card mt-4 rounded-xl p-5 text-center">
+          <div key={current.id}>
+            <div className="surface-card mt-3 rounded-xl p-4 text-center">
               <p className="text-muted text-xs">
                 {studyMode === "career"
                   ? `${t("vocab.mode.career")} ${careerState.activeLevel}.${careerState.activeStageIndex + 1}`
@@ -936,12 +1020,12 @@ export default function VocabFlashcards() {
                 - {t("common.card")}{" "}
                 {sessionIndex + 1}/{sessionIds.length}
               </p>
-              <p className="mt-3 text-4xl font-bold">{current.word}</p>
-              <p className="text-muted mt-2 text-sm">{current.reading}</p>
+              <p className="mt-2.5 text-4xl font-bold">{current.word}</p>
+              <p className="text-muted mt-1.5 text-sm">{current.reading}</p>
               {showMeaning ? (
-                <p className="mt-3 text-base font-medium">{current.meaning}</p>
+                <p className="mt-2.5 text-base font-medium">{current.meaning}</p>
               ) : (
-                <p className="text-muted mt-3 text-sm">{t("vocab.session.recallHint")}</p>
+                <p className="text-muted mt-2.5 text-sm">{t("vocab.session.recallHint")}</p>
               )}
             </div>
 
@@ -949,41 +1033,105 @@ export default function VocabFlashcards() {
               <button
                 type="button"
                 onClick={() => setShowMeaning(true)}
-                className="btn-primary mt-4 h-10 w-full rounded-lg text-sm font-medium"
+                className="btn-option mt-3 h-10 w-full rounded-lg text-sm font-medium"
               >
                 {t("common.showAnswer")}
               </button>
             )}
 
             {showMeaning && (
-              <div className="mt-4 grid grid-cols-4 gap-2">
-                {RATING_BUTTONS.map((btn) => (
+              <>
+                <div className="mt-3 grid grid-cols-4 gap-2">
+                  {RATING_BUTTONS.map((btn) => (
+                    <button
+                      key={btn.rating}
+                      type="button"
+                      onClick={() => handleRate(btn.rating)}
+                      disabled={isWaitingNextCard}
+                      title={t(`vocab.rating.${btn.rating}`)}
+                      aria-label={t(`vocab.rating.${btn.rating}`)}
+                      className={`${btn.className} flex h-10 items-center justify-center rounded-lg disabled:cursor-not-allowed disabled:opacity-70`}
+                    >
+                      <btn.Icon className="h-4 w-4" aria-hidden="true" />
+                    </button>
+                  ))}
+                </div>
+                <div className="mt-2.5 flex justify-end">
                   <button
-                    key={btn.rating}
                     type="button"
-                    onClick={() => handleRate(btn.rating)}
-                    title={t(`vocab.rating.${btn.rating}`)}
-                    aria-label={t(`vocab.rating.${btn.rating}`)}
-                    className={`${btn.className} flex h-10 items-center justify-center rounded-lg`}
+                    onClick={requestMemoryTip}
+                    disabled={
+                      isLoadingMemoryTip ||
+                      (vocabAiQuota !== null && vocabAiQuota.dailyRemaining <= 0) ||
+                      memoryTipCardId === current.id
+                    }
+                    className="btn-option inline-flex h-8 items-center gap-1 rounded-md px-2.5 text-[11px] font-medium"
                   >
-                    <btn.Icon className="h-4 w-4" aria-hidden="true" />
+                    {isLoadingMemoryTip ? <span className="ai-spinner" aria-hidden="true" /> : <CircleHelp className="h-3.5 w-3.5" aria-hidden="true" />}
+                    {vocabAiQuota !== null && vocabAiQuota.dailyRemaining <= 0
+                      ? t("vocab.ai.dailyBlocked")
+                      : memoryTipCardId === current.id
+                        ? t("vocab.ai.used")
+                        : isLoadingMemoryTip
+                          ? t("vocab.ai.loading")
+                          : t("vocab.ai.cta")}
                   </button>
-                ))}
-              </div>
+                </div>
+                {memoryTipError && (
+                  <p className="mt-2 text-xs text-[var(--danger)]">{memoryTipError}</p>
+                )}
+                {(isLoadingMemoryTip || memoryTip) && (
+                  <div className="surface-card animate-ai-panel-in mt-2 rounded-lg border border-[var(--border)]/80 p-2.5">
+                    <p className="text-xs font-semibold">{t("vocab.ai.title")}</p>
+                    {isLoadingMemoryTip && (
+                      <div className="mt-2 space-y-2">
+                        <div className="ai-skeleton-line h-3 w-2/5" />
+                        <div className="ai-skeleton-line h-3 w-full" />
+                        <div className="ai-skeleton-line h-3 w-3/4" />
+                      </div>
+                    )}
+                    {memoryTip && (
+                      <div className="mt-2 space-y-1.5 text-xs">
+                        <div>
+                          <p className="font-semibold">{t("vocab.ai.mnemonic")}</p>
+                          <p className="text-muted mt-1">{memoryTip.mnemonic}</p>
+                        </div>
+                        <div>
+                          <p className="font-semibold">{t("vocab.ai.readingHook")}</p>
+                          <p className="text-muted mt-1">{memoryTip.readingHook}</p>
+                        </div>
+                        <div>
+                          <p className="font-semibold">{t("vocab.ai.usageHint")}</p>
+                          <p className="text-muted mt-1">{memoryTip.usageHint}</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+                {vocabAiQuota && (
+                  <p className="text-muted mt-1 text-center text-[10px]">
+                    {t("vocab.ai.quotaDailyCompact", {
+                      remaining: vocabAiQuota.dailyRemaining,
+                      max: vocabAiQuota.dailyMax,
+                    })}{" "}
+                    • {t("vocab.ai.quotaDailyResetCompact", { time: formatDuration(vocabAiQuota.dailyResetInSeconds) })}
+                  </p>
+                )}
+              </>
             )}
 
             <AnswerFeedback
-              className="mt-2"
+              className="mt-1.5"
               tone={answerFeedback}
               successLabel={t("feedback.wellDone")}
               errorLabel={t("feedback.review")}
             />
 
-          </>
+          </div>
         )}
 
         {isSessionDone && (
-          <div className="surface-card mt-4 rounded-xl p-4 text-center">
+          <div className="surface-card mt-3 rounded-xl p-3.5 text-center">
             <p className="text-sm font-semibold">{t("common.setComplete")}</p>
             <p className="text-muted mt-1 text-xs">
               {t("vocab.done.desc")}
@@ -992,7 +1140,7 @@ export default function VocabFlashcards() {
               <button
                 type="button"
                 onClick={advanceCareerStage}
-                className="btn-primary mt-3 h-10 w-full rounded-lg text-sm font-medium"
+                className="btn-primary mt-2.5 h-10 w-full rounded-lg text-sm font-medium"
               >
                 {t("vocab.done.nextStage")}
               </button>
@@ -1000,7 +1148,7 @@ export default function VocabFlashcards() {
             <button
               type="button"
               onClick={stopSession}
-              className="btn-option mt-3 h-10 w-full rounded-lg text-sm font-medium"
+              className="btn-option mt-2.5 h-10 w-full rounded-lg text-sm font-medium"
             >
               {t("common.backToOptions")}
             </button>

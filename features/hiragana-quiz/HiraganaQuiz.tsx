@@ -7,6 +7,7 @@ import { X } from "lucide-react";
 import AnswerFeedback from "@/components/feedback/AnswerFeedback";
 import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n";
+import { clearRewardToast } from "@/lib/reward-toast";
 import { clearTrainingStatus, saveTrainingStatus } from "@/lib/training-status.storage";
 import {
   clearHiraganaSession,
@@ -97,6 +98,7 @@ export default function HiraganaQuiz() {
       const stop = endAfterThisFeedbackRef.current;
       endAfterThisFeedbackRef.current = false;
       setSelectedAnswer(null);
+      clearRewardToast();
 
       if (stop) {
         setSessionEnded(true);

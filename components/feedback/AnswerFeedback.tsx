@@ -1,7 +1,8 @@
 "use client";
 
-import { CheckCircle2, XCircle } from "lucide-react";
+import { useEffect, useRef } from "react";
 import { useI18n } from "@/lib/i18n";
+import { clearRewardToast, emitRewardToast } from "@/lib/reward-toast";
 
 type FeedbackTone = "success" | "error" | null;
 
@@ -21,21 +22,25 @@ export default function AnswerFeedback({
   const { t } = useI18n();
   const resolvedSuccessLabel = successLabel ?? t("feedback.correct");
   const resolvedErrorLabel = errorLabel ?? t("feedback.incorrect");
+  const lastToneRef = useRef<FeedbackTone>(null);
 
-  return (
-    <div className={`flex h-7 items-center justify-center ${className}`.trim()} aria-live="polite">
-      {tone === "success" && (
-        <span className="feedback-chip feedback-chip-success animate-feedback-pop">
-          <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
-          {resolvedSuccessLabel}
-        </span>
-      )}
-      {tone === "error" && (
-        <span className="feedback-chip feedback-chip-error animate-feedback-pop">
-          <XCircle className="h-4 w-4" aria-hidden="true" />
-          {resolvedErrorLabel}
-        </span>
-      )}
-    </div>
-  );
+  useEffect(() => {
+    if (tone === null) {
+      clearRewardToast();
+      lastToneRef.current = tone;
+      return;
+    }
+    if (!tone || tone === lastToneRef.current) {
+      lastToneRef.current = tone;
+      return;
+    }
+    emitRewardToast({
+      tone,
+      label: tone === "success" ? resolvedSuccessLabel : resolvedErrorLabel,
+    });
+    lastToneRef.current = tone;
+  }, [resolvedErrorLabel, resolvedSuccessLabel, tone]);
+
+  // Keep this lightweight placeholder to avoid layout jumps.
+  return <div className={`h-1 ${className}`.trim()} aria-live="polite" />;
 }

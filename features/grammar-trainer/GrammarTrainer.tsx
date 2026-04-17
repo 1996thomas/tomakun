@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
-import { CircleHelp, X } from "lucide-react";
+import { CircleHelp, Sparkles, X } from "lucide-react";
 import type { JLPTLevel } from "@/types/vocab";
 import type { GrammarPoint } from "@/types/grammar";
 import AnswerFeedback from "@/components/feedback/AnswerFeedback";
@@ -25,9 +25,18 @@ import {
   type GrammarSessionProgress,
 } from "@/features/grammar-trainer/grammar.logic";
 import { useI18n } from "@/lib/i18n";
+import { clearRewardToast } from "@/lib/reward-toast";
+import type { GrammarExplainRequest, GrammarExplainResult } from "@/types/grammar-ai";
 
 const LEVELS: JLPTLevel[] = ["N5", "N4", "N3", "N2", "N1"];
 const SET_SIZES = [5, 10, 20, 30] as const;
+
+type GrammarAiQuota = {
+  dailyMax: number;
+  dailyUsed: number;
+  dailyRemaining: number;
+  dailyResetInSeconds: number;
+};
 
 const grammarLevelLoaders: Record<JLPTLevel, () => Promise<GrammarPoint[]>> = {
   N5: () => import("@/data/processed/grammar_n5.json").then((mod) => mod.default as GrammarPoint[]),
@@ -92,7 +101,7 @@ function getSavedSessionSnapshot() {
 }
 
 export default function GrammarTrainer() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const [targetLevel, setTargetLevel] = useState<JLPTLevel>("N5");
   const [loadedGrammarByLevel, setLoadedGrammarByLevel] =
     useState<Partial<Record<JLPTLevel, GrammarPoint[]>>>({});
@@ -109,6 +118,13 @@ export default function GrammarTrainer() {
   const [showStopModal, setShowStopModal] = useState(false);
   const [showOverwriteModal, setShowOverwriteModal] = useState(false);
   const [pendingNavigationHref, setPendingNavigationHref] = useState<string | null>(null);
+  const [showExplanationPanel, setShowExplanationPanel] = useState(false);
+  const [isAnswerRevealedByAI, setIsAnswerRevealedByAI] = useState(false);
+  const [hasRequestedExplanationForQuestion, setHasRequestedExplanationForQuestion] = useState(false);
+  const [isLoadingExplanation, setIsLoadingExplanation] = useState(false);
+  const [explanationError, setExplanationError] = useState<string | null>(null);
+  const [explanation, setExplanation] = useState<GrammarExplainResult | null>(null);
+  const [aiQuota, setAiQuota] = useState<GrammarAiQuota | null>(null);
   const loadedRef = useRef<Partial<Record<JLPTLevel, GrammarPoint[]>>>({});
   const inFlightRef = useRef<Partial<Record<JLPTLevel, Promise<GrammarPoint[]>>>>({});
 
@@ -217,6 +233,12 @@ export default function GrammarTrainer() {
     setSelected(null);
     setFeedback(null);
     setQuestion(first ? createQuestion(first, pool) : null);
+    setIsAnswerRevealedByAI(false);
+    setHasRequestedExplanationForQuestion(false);
+    setShowExplanationPanel(false);
+    setExplanation(null);
+    setExplanationError(null);
+    setIsLoadingExplanation(false);
   }
 
   function confirmStartTraining(): void {
@@ -234,6 +256,12 @@ export default function GrammarTrainer() {
     setSelected(null);
     setFeedback(null);
     setShowStopModal(false);
+    setIsAnswerRevealedByAI(false);
+    setHasRequestedExplanationForQuestion(false);
+    setShowExplanationPanel(false);
+    setExplanation(null);
+    setExplanationError(null);
+    setIsLoadingExplanation(false);
   }
 
   const resumeSavedSession = useCallback((): void => {
@@ -276,15 +304,107 @@ export default function GrammarTrainer() {
     const ok = isCorrectAnswer(question, choice);
     setSelected(choice);
     setFeedback(ok ? "correct" : "wrong");
+    setIsAnswerRevealedByAI(false);
+    setHasRequestedExplanationForQuestion(false);
+    setShowExplanationPanel(false);
+    setExplanation(null);
+    setExplanationError(null);
 
     window.setTimeout(() => {
-      const nextProgress = updateProgress(progress, ok);
-      const nextItem = session[nextProgress.index] ?? null;
-      setProgress(nextProgress);
-      setSelected(null);
-      setFeedback(null);
-      setQuestion(nextItem ? createQuestion(nextItem, pool) : null);
+      moveToNextQuestion(ok);
     }, 650);
+  }
+
+  function moveToNextQuestion(isCorrect: boolean | null): void {
+    clearRewardToast();
+    const nextProgress =
+      isCorrect === null
+        ? {
+            index: progress.index + 1,
+            total: progress.total,
+            correct: progress.correct,
+            wrong: progress.wrong,
+          }
+        : updateProgress(progress, isCorrect);
+    const nextItem = session[nextProgress.index] ?? null;
+    setProgress(nextProgress);
+    setSelected(null);
+    setFeedback(null);
+    setQuestion(nextItem ? createQuestion(nextItem, pool) : null);
+    setIsAnswerRevealedByAI(false);
+    setHasRequestedExplanationForQuestion(false);
+    setShowExplanationPanel(false);
+    setExplanation(null);
+    setExplanationError(null);
+    setIsLoadingExplanation(false);
+  }
+
+  async function requestExplanation(): Promise<void> {
+    if (!question || !current || isLoadingExplanation || hasRequestedExplanationForQuestion) return;
+    setIsAnswerRevealedByAI(true);
+    setHasRequestedExplanationForQuestion(true);
+    setShowExplanationPanel(true);
+    setIsLoadingExplanation(true);
+    setExplanationError(null);
+
+    try {
+      const payload: GrammarExplainRequest = {
+        locale,
+        question,
+        current,
+        selectedChoice: selected,
+      };
+      const response = await fetch("/api/ai/grammar-explain", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+      const data = (await response.json()) as {
+        explanation?: GrammarExplainResult;
+        quota?: GrammarAiQuota;
+        error?: string;
+      };
+      if (data.quota) setAiQuota(data.quota);
+      if (!response.ok || !data.explanation) {
+        throw new Error(data.error ?? "Failed to explain");
+      }
+      setExplanation(data.explanation);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : t("grammar.ai.error");
+      setExplanationError(message || t("grammar.ai.error"));
+    } finally {
+      setIsLoadingExplanation(false);
+    }
+  }
+
+  useEffect(() => {
+    if (!inSession) return;
+    let cancelled = false;
+    const fetchQuota = async () => {
+      try {
+        const response = await fetch("/api/ai/grammar-explain", { method: "GET", cache: "no-store" });
+        const data = (await response.json()) as { quota?: GrammarAiQuota };
+        if (!cancelled && data.quota) setAiQuota(data.quota);
+      } catch {
+        // no-op: quota is informative only
+      }
+    };
+    void fetchQuota();
+    return () => {
+      cancelled = true;
+    };
+  }, [inSession, progress.index]);
+
+  function formatDuration(seconds: number): string {
+    const safe = Math.max(0, seconds);
+    const hours = Math.floor(safe / 3600);
+    const minutes = Math.floor((safe % 3600) / 60);
+    const secs = safe % 60;
+    if (hours > 0) return `${hours}h ${String(minutes).padStart(2, "0")}m`;
+    if (minutes > 0) return `${minutes}m ${String(secs).padStart(2, "0")}s`;
+    return `${secs}s`;
   }
 
   useEffect(() => {
@@ -529,9 +649,14 @@ export default function GrammarTrainer() {
                 {question.choices.map((choice) => {
                   const isRight = question.answer === choice;
                   const isSelected = selected === choice;
+                  const revealByAI = isAnswerRevealedByAI && selected === null;
                   const stateClass =
-                    selected === null
-                      ? "btn-option"
+                    revealByAI
+                      ? isRight
+                        ? "state-correct"
+                        : "btn-option opacity-70"
+                      : selected === null
+                        ? "btn-option"
                       : isRight
                         ? "state-correct"
                         : isSelected
@@ -543,7 +668,7 @@ export default function GrammarTrainer() {
                       variant="outline"
                       type="button"
                       onClick={() => handleAnswer(choice)}
-                      disabled={selected !== null}
+                      disabled={selected !== null || isAnswerRevealedByAI}
                       className={`h-10 rounded-lg px-3 text-left text-sm font-medium transition ${stateClass}`}
                     >
                       {choice}
@@ -551,7 +676,120 @@ export default function GrammarTrainer() {
                   );
                 })}
               </div>
+              <div className="mt-3 flex justify-end">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={requestExplanation}
+                  disabled={
+                    isLoadingExplanation ||
+                    selected !== null ||
+                    hasRequestedExplanationForQuestion ||
+                    (aiQuota !== null && aiQuota.dailyRemaining <= 0)
+                  }
+                  className="h-8 rounded-md px-2.5 text-[11px] font-medium inline-flex items-center gap-1"
+                >
+                  {isLoadingExplanation ? (
+                    <span className="ai-spinner" aria-hidden="true" />
+                  ) : (
+                    <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
+                  )}
+                  {aiQuota !== null && aiQuota.dailyRemaining <= 0
+                    ? t("grammar.ai.dailyBlocked")
+                    : isLoadingExplanation
+                    ? t("grammar.ai.loading")
+                    : hasRequestedExplanationForQuestion
+                      ? t("grammar.ai.used")
+                      : t("grammar.ai.cta")}
+                </Button>
+              </div>
             </div>
+
+            {showExplanationPanel && (
+              <div className="surface-card animate-ai-panel-in mt-3 rounded-lg border border-[var(--border)]/80 p-3">
+                <div className="flex items-center justify-between gap-2">
+                  <p className="inline-flex items-center gap-1.5 text-xs font-semibold">
+                    <Sparkles className="h-3.5 w-3.5 text-[var(--primary)]" aria-hidden="true" />
+                    {t("grammar.ai.title")}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setShowExplanationPanel(false)}
+                    className="btn-option inline-flex h-7 w-7 items-center justify-center rounded-md"
+                    aria-label={t("grammar.ai.close")}
+                  >
+                    <X className="h-3.5 w-3.5" aria-hidden="true" />
+                  </button>
+                </div>
+                <p className="text-muted mt-1 text-[11px]">{t("grammar.ai.subtitle")}</p>
+                {isLoadingExplanation && (
+                  <div className="mt-2 space-y-2">
+                    <div className="ai-skeleton-line h-3 w-2/5" />
+                    <div className="ai-skeleton-line h-3 w-full" />
+                    <div className="ai-skeleton-line h-3 w-4/5" />
+                    <div className="ai-skeleton-line h-3 w-3/5" />
+                  </div>
+                )}
+                {explanationError && (
+                  <p className="mt-2 text-xs text-[var(--danger)]">{explanationError}</p>
+                )}
+                {explanation && (
+                  <div className="mt-2 space-y-2 text-xs">
+                    <div>
+                      <p className="font-semibold">{t("grammar.ai.ruleSummary")}</p>
+                      <p className="text-muted mt-1">{explanation.ruleSummary}</p>
+                    </div>
+                    <div>
+                      <p className="font-semibold">{t("grammar.ai.whyCorrect")}</p>
+                      <p className="text-muted mt-1">{explanation.whyThisIsCorrect}</p>
+                    </div>
+                    <div>
+                      <p className="font-semibold">{t("grammar.ai.commonMistake")}</p>
+                      <p className="text-muted mt-1">{explanation.whyCommonMistake}</p>
+                    </div>
+                    <div>
+                      <p className="font-semibold">{t("grammar.ai.extraExample")}</p>
+                      <p className="mt-1">{explanation.extraExampleJp}</p>
+                      <p className="text-muted mt-1">{explanation.extraExampleRomaji}</p>
+                      <p className="text-muted mt-1">{explanation.extraExampleTranslation}</p>
+                    </div>
+                    <div>
+                      <p className="font-semibold">{t("grammar.ai.memoryTip")}</p>
+                      <p className="text-muted mt-1">{explanation.memoryTip}</p>
+                    </div>
+                    <div className="pt-1">
+                      <Button
+                        type="button"
+                        onClick={() => moveToNextQuestion(false)}
+                        className="h-9 w-full rounded-lg text-xs font-medium"
+                      >
+                        {t("grammar.ai.nextQuestion")}
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+            {isAnswerRevealedByAI && !showExplanationPanel && (
+              <div className="mt-2">
+                <Button
+                  type="button"
+                  onClick={() => moveToNextQuestion(false)}
+                  className="h-9 w-full rounded-lg text-xs font-medium"
+                >
+                  {t("grammar.ai.nextQuestion")}
+                </Button>
+              </div>
+            )}
+            {aiQuota && (
+              <p className="text-muted mt-1 text-center text-[10px]">
+                {t("grammar.ai.quotaDailyCompact", {
+                  remaining: aiQuota.dailyRemaining,
+                  max: aiQuota.dailyMax,
+                })}{" "}
+                • {t("grammar.ai.quotaDailyResetCompact", { time: formatDuration(aiQuota.dailyResetInSeconds) })}
+              </p>
+            )}
 
             <AnswerFeedback
               className="mt-2"

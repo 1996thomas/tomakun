@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import BottomNav from "@/components/layout/BottomNav";
 import Navbar from "@/components/layout/Navbar";
+import RewardToaster from "@/components/feedback/RewardToaster";
 import "./globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
@@ -115,6 +116,7 @@ export default function RootLayout({
         <main className="mx-auto flex w-full max-w-md flex-1 flex-col px-4 pb-24 pt-4">
           {children}
         </main>
+        <RewardToaster />
         <BottomNav />
       </body>
     </html>
