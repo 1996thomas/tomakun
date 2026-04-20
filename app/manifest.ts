@@ -13,25 +13,15 @@ export default function manifest(): MetadataRoute.Manifest {
     theme_color: "#e3342f",
     icons: [
       {
-        src: "/icon",
+        src: "/android-chrome-512x512.png",
         sizes: "512x512",
         type: "image/png",
         purpose: "any",
       },
       {
-        src: "/apple-icon",
-        sizes: "180x180",
-        type: "image/png",
-      },
-      {
-        src: "/logo.svg",
-        sizes: "any",
-        type: "image/svg+xml",
-      },
-      {
-        src: "/logo-dark.svg",
+        src: "/android-chrome-512x512.png",
         sizes: "512x512",
-        type: "image/svg+xml",
+        type: "image/png",
       },
     ],
   };

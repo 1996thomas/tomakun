@@ -13,9 +13,9 @@ export const metadata: Metadata = {
     url: "/hiragana/",
     images: [
       {
-        url: "/opengraph-image",
-        width: 1200,
-        height: 630,
+        url: "/android-chrome-512x512.png",
+        width: 512,
+        height: 512,
         alt: "Hiragana practice - TOMAKUN",
       },
     ],
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     title: "Hiragana practice – Quick Japanese kana quiz",
     description:
       "Train your hiragana recognition with short, focused quizzes and one-question-at-a-time feedback, built for daily Japanese practice.",
-    images: ["/twitter-image"],
+    images: ["/android-chrome-512x512.png"],
   },
   alternates: {
     canonical: "/hiragana/",

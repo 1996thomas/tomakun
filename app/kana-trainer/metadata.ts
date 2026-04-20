@@ -12,9 +12,9 @@ export const metadata: Metadata = {
     url: "/kana-trainer/",
     images: [
       {
-        url: "/opengraph-image",
-        width: 1200,
-        height: 630,
+        url: "/android-chrome-512x512.png",
+        width: 512,
+        height: 512,
         alt: "Kana trainer - TOMAKUN",
       },
     ],
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     title: "Kana Trainer – Configure your Japanese kana practice sets",
     description:
       "Set up Hiragana and Katakana practice sessions with different set sizes, then jump into fast kana quizzes.",
-    images: ["/twitter-image"],
+    images: ["/android-chrome-512x512.png"],
   },
   alternates: {
     canonical: "/kana-trainer/",

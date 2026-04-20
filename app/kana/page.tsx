@@ -13,9 +13,9 @@ export const metadata: Metadata = {
     url: "/kana/",
     images: [
       {
-        url: "/opengraph-image",
-        width: 1200,
-        height: 630,
+        url: "/android-chrome-512x512.png",
+        width: 512,
+        height: 512,
         alt: "Kana practice - TOMAKUN",
       },
     ],
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     title: "Kana practice – Hiragana & Katakana quiz",
     description:
       "Fast Japanese kana drills to train Hiragana and Katakana recognition with one-question-at-a-time feedback.",
-    images: ["/twitter-image"],
+    images: ["/android-chrome-512x512.png"],
   },
   alternates: {
     canonical: "/kana/",

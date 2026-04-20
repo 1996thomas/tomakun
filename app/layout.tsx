@@ -52,9 +52,9 @@ export const metadata: Metadata = {
     url: "/",
     images: [
       {
-        url: "/opengraph-image",
-        width: 1200,
-        height: 630,
+        url: "/android-chrome-512x512.png",
+        width: 512,
+        height: 512,
         alt: "TOMAKUN - Japanese practice app",
       },
     ],
@@ -64,7 +64,7 @@ export const metadata: Metadata = {
     title: "TOMAKUN – Japanese practice app",
     description:
       "A Japanese practice app focused on quick drills for kana, vocabulary and grammar – not another textbook.",
-    images: ["/twitter-image"],
+    images: ["/android-chrome-512x512.png"],
   },
   alternates: {
     canonical: "/",
@@ -75,9 +75,9 @@ export const metadata: Metadata = {
   },
   manifest: "/manifest.webmanifest",
   icons: {
-    icon: [{ url: "/icon", type: "image/png" }],
-    shortcut: ["/icon"],
-    apple: [{ url: "/apple-icon", type: "image/png" }],
+    icon: [{ url: "/android-chrome-512x512.png", sizes: "512x512", type: "image/png" }],
+    shortcut: ["/android-chrome-512x512.png"],
+    apple: [{ url: "/android-chrome-512x512.png", sizes: "512x512", type: "image/png" }],
   },
 };
 

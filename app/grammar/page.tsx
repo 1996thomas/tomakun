@@ -13,9 +13,9 @@ export const metadata: Metadata = {
     url: "/grammar/",
     images: [
       {
-        url: "/opengraph-image",
-        width: 1200,
-        height: 630,
+        url: "/android-chrome-512x512.png",
+        width: 512,
+        height: 512,
         alt: "Japanese grammar practice - TOMAKUN",
       },
     ],
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     title: "Japanese grammar practice – Quick JLPT drills",
     description:
       "Fast JLPT grammar practice for N5–N1 with quick questions, usage-based prompts and automatic next questions.",
-    images: ["/twitter-image"],
+    images: ["/android-chrome-512x512.png"],
   },
   alternates: {
     canonical: "/grammar/",

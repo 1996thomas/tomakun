@@ -13,9 +13,9 @@ export const metadata: Metadata = {
     url: "/vocab/",
     images: [
       {
-        url: "/opengraph-image",
-        width: 1200,
-        height: 630,
+        url: "/android-chrome-512x512.png",
+        width: 512,
+        height: 512,
         alt: "Japanese vocabulary practice - TOMAKUN",
       },
     ],
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     title: "Japanese vocabulary practice – JLPT flashcards trainer",
     description:
       "Fast Japanese vocab drills with flashcards, SRS-style review and clear stats, ideal for daily JLPT practice.",
-    images: ["/twitter-image"],
+    images: ["/android-chrome-512x512.png"],
   },
   alternates: {
     canonical: "/vocab/",
