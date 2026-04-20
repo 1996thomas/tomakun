@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   metadataBase:
     typeof process !== "undefined" && process.env.NEXT_PUBLIC_APP_URL
       ? new URL(process.env.NEXT_PUBLIC_APP_URL)
-      : undefined,
+      : new URL("https://tomakun.fr"),
   robots: {
     index: true,
     follow: true,
@@ -48,30 +48,36 @@ export const metadata: Metadata = {
       "Practice hiragana, katakana, JLPT vocabulary and grammar with fast quizzes, instant feedback and a mobile-first interface.",
     type: "website",
     locale: "en",
+    siteName: "TOMAKUN",
+    url: "/",
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "TOMAKUN - Japanese practice app",
+      },
+    ],
   },
   twitter: {
     card: "summary",
     title: "TOMAKUN – Japanese practice app",
     description:
       "A Japanese practice app focused on quick drills for kana, vocabulary and grammar – not another textbook.",
+    images: ["/twitter-image"],
   },
   alternates: {
     canonical: "/",
     languages: {
       "en": "/",
+      "fr": "/",
     },
   },
   manifest: "/manifest.webmanifest",
   icons: {
-    icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-      { url: "/android-chrome-192x192.png", sizes: "192x192", type: "image/png" },
-      { url: "/android-chrome-512x512.png", sizes: "512x512", type: "image/png" },
-    ],
-    shortcut: ["/favicon.ico"],
-    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+    icon: [{ url: "/icon", type: "image/png" }],
+    shortcut: ["/icon"],
+    apple: [{ url: "/apple-icon", type: "image/png" }],
   },
 };
 
